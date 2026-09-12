@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F.A.S.P.A.S — Full CBT Mode</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8MQXCOH4G8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8MQXCOH4G8');
+</script>
+<!-- GoatCounter -->
+<script data-goatcounter="https://faspas-jamb.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" class="back-link">← Back to F.A.S.P.A.S</a>
+
+  <div class="brand-row">
+    <div class="brand-mark">F</div>
+    <div>
+      <div class="brand-name">Full CBT Mode</div>
+      <div class="brand-sub">180 questions · 2:00:00 · English, Physics, Chemistry, Biology</div>
+    </div>
+  </div>
+
+  <!-- ===================== PICK SCREEN ===================== -->
+  <div id="screen-pick" class="card">
+    <h2>Ready for a Full Mock Exam?</h2>
+    <p style="color:var(--muted); font-size:0.87rem; line-height:1.6; margin-bottom:16px;">
+      This simulates the real JAMB UTME: English (60 questions), Physics, Chemistry and Biology
+      (40 questions each) — 180 total, one single 2-hour countdown. You can move freely between
+      subjects and questions, flag any for review, and everything auto-submits when time runs out.
+      Explanations are only shown after you finish, on the review screen — just like the real exam.
+    </p>
+    <button class="start-btn" id="startBtn">START FULL CBT — 2:00:00</button>
+  </div>
+
+  <!-- ===================== EXAM SCREEN ===================== -->
+  <div id="screen-exam" class="card hidden">
+    <div class="exam-top hidden" id="examTop">
+      <span id="qCounter">Q 1/180</span>
+      <span class="timer-badge hidden" id="timerBadge">⏱ 2:00:00</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="q-tag" id="qTag"></div>
+    <div class="q-text" id="qText"></div>
+    <div id="optsWrap"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-label" id="fbLabel"></div>
+      <div id="fbExp"></div>
+    </div>
+    <div class="nav-row">
+      <button class="start-btn ghost hidden" id="prevBtn">← Previous</button>
+      <button class="start-btn ghost" id="flagBtn">🚩 Flag for Review</button>
+      <button class="start-btn hidden" id="nextBtn">Next →</button>
+    </div>
+    <button class="start-btn" style="margin-top:12px; background:linear-gradient(90deg,#ff5470,#c8384f);" id="submitBtn">Submit Full CBT</button>
+  </div>
+
+  <!-- ===================== REVIEW SCREEN (Full CBT only) ===================== -->
+  <div id="screen-review" class="card hidden">
+    <h2>Full CBT Result</h2>
+    <div class="score-circle">
+      <div class="score-num" id="reviewScore">0/180</div>
+      <div class="score-label">CORRECT</div>
+    </div>
+    <div class="subject-breakdown" id="subjectBreakdown"></div>
+    <h2 style="margin-top:20px;">Full Review</h2>
+    <div id="reviewList"></div>
+    <a href="index.html" class="start-btn" style="margin-top:16px; display:block; text-align:center; text-decoration:none;">Back to Home</a>
+  </div>
+
+</div>
+
+<!-- Warning banner for 30/10 min remaining -->
+<div id="warnBanner" class="hidden" style="position:fixed; top:16px; left:16px; right:16px; z-index:70; background:var(--warn); color:#1a1200; padding:12px 16px; border-radius:12px; font-weight:700; text-align:center; box-shadow:0 6px 20px rgba(0,0,0,0.4);"></div>
+
+<!-- Question navigator -->
+<button id="qnavToggle" class="qnav-toggle hidden" onclick="openQnav()">MAP</button>
+<div id="qnavPanel" class="qnav-panel">
+  <h3>Question Navigator</h3>
+  <div class="qnav-legend">
+    <span><span class="dot" style="background:var(--bg-2); border:1px solid var(--line);"></span>Unanswered</span>
+    <span><span class="dot" style="background:rgba(61,220,132,0.3); border:1px solid var(--pass);"></span>Answered</span>
+    <span><span class="dot" style="background:rgba(255,184,77,0.3); border:1px solid var(--warn);"></span>Flagged</span>
+  </div>
+  <div id="qnavGrid"></div>
+  <button class="start-btn ghost" onclick="closeQnav()">Close</button>
+</div>
+
+<script src="physics-data.js"></script>
+<script>window.PHYSICS_BANK = SUBJECT_BANK;</script>
+<script src="chemistry-data.js"></script>
+<script>window.CHEMISTRY_BANK = SUBJECT_BANK;</script>
+<script src="biology-data.js"></script>
+<script>window.BIOLOGY_BANK = SUBJECT_BANK;</script>
+<script src="english-data.js"></script>
+<script>window.ENGLISH_BANK = SUBJECT_BANK;</script>
+<script src="assets/faspas-engine.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('startBtn').addEventListener('click', ()=>{
+    startFullCbt({
+      english: window.ENGLISH_BANK,
+      physics: window.PHYSICS_BANK,
+      chemistry: window.CHEMISTRY_BANK,
+      biology: window.BIOLOGY_BANK,
+    });
+  });
+  document.getElementById('nextBtn').addEventListener('click', nextFullCbtQuestion);
+  document.getElementById('prevBtn').addEventListener('click', prevFullCbtQuestion);
+  document.getElementById('flagBtn').addEventListener('click', toggleFlag);
+  document.getElementById('submitBtn').addEventListener('click', confirmSubmitFullCbt);
+});
+</script>
+</body>
+</html>

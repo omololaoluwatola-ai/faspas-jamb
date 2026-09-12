@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F.A.S.P.A.S — My History</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8MQXCOH4G8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8MQXCOH4G8');
+</script>
+<!-- GoatCounter -->
+<script data-goatcounter="https://faspas-jamb.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" class="back-link">← Back to F.A.S.P.A.S</a>
+
+  <div class="brand-row">
+    <div class="brand-mark">F</div>
+    <div>
+      <div class="brand-name">My History</div>
+      <div class="brand-sub">Track your improvement over time</div>
+    </div>
+  </div>
+
+  <div class="card" id="weakStrongCard">
+    <h2>Where You Stand</h2>
+    <div id="weakStrongContent"></div>
+  </div>
+
+  <div class="card">
+    <h2>Attempt History</h2>
+    <div id="historyList"></div>
+  </div>
+
+</div>
+
+<script>
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) + ' · ' +
+         d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+}
+
+function loadHistory(){
+  try{
+    const raw = localStorage.getItem('faspas_history');
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+
+function render(){
+  const history = loadHistory();
+  const listEl = document.getElementById('historyList');
+  const wsEl = document.getElementById('weakStrongContent');
+
+  if(history.length===0){
+    listEl.innerHTML = '<div class="empty-note">No attempts yet — practice a topic, a past-year paper, or a Full CBT to start building your history.</div>';
+    wsEl.innerHTML = '<div class="empty-note">Your weak and strong topics will show up here once you\'ve done a few practice sessions.</div>';
+    return;
+  }
+
+  // Aggregate topic performance across ALL history entries
+  const topicAgg = {};
+  history.forEach(entry=>{
+    const bd = entry.breakdown || {};
+    Object.keys(bd).forEach(topic=>{
+      if(!topicAgg[topic]) topicAgg[topic] = {correct:0,total:0};
+      topicAgg[topic].correct += bd[topic].correct;
+      topicAgg[topic].total += bd[topic].total;
+    });
+  });
+
+  const ranked = Object.entries(topicAgg)
+    .filter(([,v])=>v.total>=2) // only surface topics with enough data
+    .map(([topic,v])=>({topic, pct: Math.round((v.correct/v.total)*100), correct:v.correct, total:v.total}))
+    .sort((a,b)=>a.pct-b.pct);
+
+  const weak = ranked.filter(r=>r.pct<60).slice(0,5);
+  const strong = ranked.filter(r=>r.pct>=80).slice(-5).reverse();
+
+  let wsHtml = '';
+  if(weak.length){
+    wsHtml += '<div style="margin-bottom:12px;"><div style="font-size:0.85rem; color:var(--muted); margin-bottom:6px;">Needs work:</div>';
+    weak.forEach(w=> wsHtml += `<span class="weak-tag">${w.topic} — ${w.pct}%</span>`);
+    wsHtml += '</div>';
+  }
+  if(strong.length){
+    wsHtml += '<div><div style="font-size:0.85rem; color:var(--muted); margin-bottom:6px;">Strong areas:</div>';
+    strong.forEach(s=> wsHtml += `<span class="strong-tag">${s.topic} — ${s.pct}%</span>`);
+    wsHtml += '</div>';
+  }
+  if(!weak.length && !strong.length){
+    wsHtml = '<div class="empty-note">Keep practicing — once you\'ve answered a few questions per topic, your strong and weak areas will appear here.</div>';
+  }
+  wsEl.innerHTML = wsHtml;
+
+  listEl.innerHTML = '';
+  history.forEach(entry=>{
+    const pct = Math.round((entry.score/entry.total)*100);
+    const row = document.createElement('div');
+    row.className = 'hist-row';
+    row.innerHTML = `
+      <div class="hr-top">
+        <span class="hr-mode">${entry.modeLabel}</span>
+        <span class="hr-date">${fmtDate(entry.date)}</span>
+      </div>
+      <div class="hr-score">${entry.score}/${entry.total} <span style="color:var(--muted); font-size:0.8rem; font-weight:400;">(${pct}%)</span></div>
+    `;
+    listEl.appendChild(row);
+  });
+}
+
+render();
+</script>
+</body>
+</html>
