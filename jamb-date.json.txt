@@ -1,0 +1,5 @@
+{
+  "date": "2027-04-25T08:00:00",
+  "confirmed": false,
+  "note": "Estimated based on past years' patterns — JAMB has not officially announced the 2027 UTME date yet."
+}

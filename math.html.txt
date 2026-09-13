@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a4fc4">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>F.A.S.P.A.S — Mathematics</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8MQXCOH4G8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8MQXCOH4G8');
+</script>
+<!-- GoatCounter -->
+<script data-goatcounter="https://faspas-jamb.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   F.A.S.P.A.S — BLUE FLAME THEME (v2)
+   Shared stylesheet for all pages.
+   ============================================================ */
+
+:root{
+  --bg-0:#03050d;
+  --bg-1:#070d1e;
+  --bg-2:#0d1730;
+  --panel:#0f1c3a;
+  --line:#1e3260;
+  --line-bright:#2f4d8f;
+  --flame:#2f8fff;
+  --flame-2:#6fc6ff;
+  --flame-3:#bfeaff;
+  --flame-deep:#0a4fc4;
+  --ice:#8fd9ff;
+  --text:#eaf3ff;
+  --muted:#7d92ba;
+  --pass:#3ddc84;
+  --fail:#ff5470;
+  --warn:#ffb84d;
+  --radius:18px;
+  --radius-sm:12px;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+::selection{ background:var(--flame); color:#04101f; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  background:var(--bg-0);
+  color:var(--text);
+  font-family:'Exo 2', sans-serif;
+  min-height:100vh;
+  padding:22px 16px 70px;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* ---------- Ambient animated background: slow aurora wash ---------- */
+body::before{
+  content:"";
+  position:fixed; inset:-10%;
+  background:
+    radial-gradient(circle at 20% -10%, rgba(47,143,255,0.20), transparent 45%),
+    radial-gradient(circle at 90% 10%, rgba(111,198,255,0.12), transparent 40%),
+    radial-gradient(circle at 30% 110%, rgba(10,79,196,0.18), transparent 45%);
+  animation:aurora-drift 18s ease-in-out infinite alternate;
+  z-index:-2; pointer-events:none;
+}
+@keyframes aurora-drift{
+  0%{ transform:translate(0,0) scale(1); }
+  100%{ transform:translate(-2%,2%) scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  body::before, .brand-mark, .fullcbt-cta, .pulse-ring, .hero-title{ animation:none !important; }
+}
+
+.wrap{max-width:680px; margin:0 auto; position:relative; z-index:1;}
+
+/* ---------- Hero (home only) ---------- */
+.hero{ text-align:center; padding:18px 0 8px; position:relative; }
+.hero-mark-wrap{
+  position:relative; width:112px; height:112px; margin:0 auto 18px;
+  display:flex; align-items:center; justify-content:center;
+}
+.pulse-ring{
+  position:absolute; inset:0; border-radius:50%;
+  border:2px solid var(--flame);
+  animation:pulse-ring 2.6s ease-out infinite;
+}
+.pulse-ring.delay{ animation-delay:1.3s; }
+@keyframes pulse-ring{
+  0%{ transform:scale(0.7); opacity:0.9; }
+  100%{ transform:scale(1.6); opacity:0; }
+}
+.hero-mark{
+  width:88px; height:88px; border-radius:24px;
+  background:linear-gradient(155deg, var(--flame-deep) 0%, var(--flame) 55%, var(--flame-3) 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Orbitron', sans-serif; font-weight:900; font-size:2.6rem;
+  color:#03101f;
+  box-shadow:0 0 50px rgba(47,143,255,0.65), 0 0 100px rgba(47,143,255,0.25), inset 0 2px 0 rgba(255,255,255,0.4);
+  position:relative; z-index:2;
+}
+.hero-title{
+  font-family:'Orbitron', sans-serif; font-weight:900; font-size:2.1rem;
+  letter-spacing:2px; margin-top:2px;
+  background:linear-gradient(90deg, var(--flame-2), var(--flame-3), var(--ice));
+  background-size:200% auto;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:shine 6s linear infinite;
+}
+@keyframes shine{
+  0%{ background-position:0% center; }
+  100%{ background-position:200% center; }
+}
+.hero-sub{ color:var(--muted); font-size:0.92rem; margin-top:8px; line-height:1.6; max-width:420px; margin-left:auto; margin-right:auto; }
+
+/* ---------- Countdown ---------- */
+.countdown{ display:flex; justify-content:center; gap:10px; margin:22px 0 4px; }
+.cd-unit{
+  background:linear-gradient(180deg, var(--panel), var(--bg-1));
+  border:1px solid var(--line-bright);
+  border-radius:var(--radius-sm);
+  padding:12px 8px; min-width:64px; text-align:center;
+  box-shadow:0 0 20px rgba(47,143,255,0.12), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.cd-num{
+  font-family:'Orbitron',sans-serif; font-weight:700; font-size:1.4rem; color:var(--flame-3);
+  text-shadow:0 0 16px rgba(111,198,255,0.6);
+}
+.cd-label{ font-size:0.66rem; color:var(--muted); letter-spacing:0.5px; margin-top:2px; text-transform:uppercase; }
+.cd-note{ text-align:center; color:var(--muted); font-size:0.72rem; margin-top:8px; }
+
+/* ---------- Brand row (subject/inner pages) ---------- */
+.brand-row{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+.brand-mark{
+  width:48px; height:48px; border-radius:14px; flex-shrink:0;
+  background:linear-gradient(155deg, var(--flame-deep), var(--flame) 60%, var(--flame-3));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Orbitron', sans-serif; font-weight:900; font-size:22px; color:#03101f;
+  box-shadow:0 0 28px rgba(47,143,255,0.55), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.brand-name{
+  font-family:'Orbitron', sans-serif; font-weight:700; font-size:1.5rem; letter-spacing:1.2px;
+  background:linear-gradient(90deg, var(--flame-2), var(--ice));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.brand-sub{ color:var(--muted); font-size:0.86rem; margin-top:2px; }
+
+/* ---------- Cards ---------- */
+.card{
+  background:linear-gradient(180deg, var(--panel), var(--bg-1));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px 18px;
+  margin-bottom:16px;
+  box-shadow:0 0 30px rgba(47,143,255,0.06), inset 0 1px 0 rgba(255,255,255,0.02);
+}
+.card h2{
+  font-family:'Orbitron', sans-serif; font-size:1.05rem; color:var(--flame-2);
+  margin-bottom:14px; letter-spacing:0.5px;
+}
+
+/* ---------- Subject grid ---------- */
+.subject-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.subject-tile{
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:18px 14px; text-decoration:none; color:var(--text); display:block;
+  position:relative; overflow:hidden;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.subject-tile::after{
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  background:radial-gradient(circle at 30% 20%, rgba(47,143,255,0.25), transparent 60%);
+  opacity:0; transition:opacity .25s ease;
+}
+.subject-tile:active{ transform:scale(0.96); }
+.subject-tile:hover{ border-color:var(--flame); box-shadow:0 8px 26px rgba(47,143,255,0.22); }
+.subject-tile:hover::after{ opacity:1; }
+.subject-tile .s-icon{ font-size:1.7rem; margin-bottom:8px; display:block; position:relative; z-index:1; }
+.subject-tile .s-name{ font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.96rem; position:relative; z-index:1; }
+.subject-tile .s-count{ color:var(--muted); font-size:0.78rem; margin-top:4px; position:relative; z-index:1; }
+
+.fullcbt-cta{
+  display:block; text-decoration:none; position:relative; overflow:hidden;
+  background:linear-gradient(120deg, var(--flame-deep), var(--flame) 45%, var(--flame-deep));
+  background-size:220% 220%;
+  animation:gradient-flow 6s ease infinite;
+  border-radius:var(--radius); padding:22px; text-align:center; color:#03101f;
+  box-shadow:0 10px 36px rgba(47,143,255,0.4);
+  margin-bottom:16px;
+  transition:transform .15s ease;
+}
+.fullcbt-cta:active{ transform:scale(0.98); }
+@keyframes gradient-flow{
+  0%{ background-position:0% 50%; }
+  50%{ background-position:100% 50%; }
+  100%{ background-position:0% 50%; }
+}
+.fullcbt-cta .fc-title{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:1.2rem; letter-spacing:1px; }
+.fullcbt-cta .fc-sub{ font-size:0.83rem; opacity:0.85; margin-top:5px; font-weight:600; }
+
+.history-link{
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:15px 16px; text-decoration:none; color:var(--text); margin-bottom:16px;
+  transition:border-color .15s ease, transform .1s ease;
+}
+.history-link:hover{ border-color:var(--flame); }
+.history-link:active{ transform:scale(0.98); }
+.history-link .h-label{ font-weight:600; font-size:0.95rem; }
+.history-link .h-arrow{ color:var(--flame-2); transition:transform .15s ease; display:inline-block; }
+.history-link:hover .h-arrow{ transform:translateX(4px); }
+
+/* ---------- Mode picker ---------- */
+.mode-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+.mode-tile{
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:16px 10px; text-align:center; cursor:pointer;
+  transition:all .15s ease;
+}
+.mode-tile:active{ transform:scale(0.96); }
+.mode-tile.selected{
+  background:linear-gradient(180deg, var(--flame), var(--flame-deep));
+  border-color:var(--flame); box-shadow:0 0 24px rgba(47,143,255,0.45);
+}
+.mode-tile .m-title{ font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.92rem; }
+.mode-tile .m-desc{ font-size:0.76rem; color:var(--muted); margin-top:4px; }
+.mode-tile.selected .m-desc{ color:rgba(3,16,31,0.75); }
+.mode-tile.selected .m-title{ color:#03101f; }
+
+.select-field{
+  width:100%; padding:14px; margin-bottom:14px;
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+  color:var(--text); font-family:'Exo 2',sans-serif; font-size:0.94rem;
+  transition:border-color .15s ease;
+}
+.select-field:focus{ outline:none; border-color:var(--flame); box-shadow:0 0 0 3px rgba(47,143,255,0.2); }
+
+.toggle-row{
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:13px 14px; margin-bottom:14px;
+}
+.toggle-row .t-label{ font-size:0.88rem; }
+.toggle-row .t-note{ font-size:0.74rem; color:var(--muted); margin-top:2px; }
+.switch{ position:relative; width:46px; height:26px; flex-shrink:0; margin-left:12px; }
+.switch input{ opacity:0; width:0; height:0; }
+.slider{ position:absolute; cursor:pointer; inset:0; background:var(--line); border-radius:20px; transition:.2s; }
+.slider::before{ content:""; position:absolute; height:20px; width:20px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.2s; }
+.switch input:checked + .slider{ background:var(--flame); box-shadow:0 0 12px rgba(47,143,255,0.6); }
+.switch input:checked + .slider::before{ transform:translateX(20px); }
+
+.start-btn{
+  width:100%; padding:16px; position:relative;
+  background:linear-gradient(90deg, var(--flame-deep), var(--flame));
+  border:none; border-radius:var(--radius-sm);
+  color:#03101f; font-family:'Orbitron',sans-serif; font-weight:700; font-size:1.02rem; letter-spacing:0.5px;
+  cursor:pointer; box-shadow:0 6px 22px rgba(47,143,255,0.35);
+  transition:transform .12s ease, box-shadow .15s ease;
+}
+.start-btn:active{ transform:scale(0.97); box-shadow:0 3px 12px rgba(47,143,255,0.3); }
+.start-btn:disabled{ opacity:0.45; box-shadow:none; }
+.start-btn.ghost{ background:transparent; border:1px solid var(--flame); color:var(--flame-2); box-shadow:none; }
+.start-btn.ghost:active{ background:rgba(47,143,255,0.1); }
+
+/* ---------- Exam screen ---------- */
+.exam-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:0.82rem; color:var(--muted); }
+.timer-badge{
+  font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.9rem;
+  padding:6px 12px; border-radius:20px; background:var(--bg-2); border:1px solid var(--line);
+  color:var(--flame-2); transition:all .3s ease;
+}
+.timer-badge.low{ color:var(--warn); border-color:var(--warn); }
+.timer-badge.critical{ color:var(--fail); border-color:var(--fail); animation:pulse 0.9s infinite; }
+@keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.45;} }
+
+.progress-bar{ height:6px; background:var(--bg-2); border-radius:4px; overflow:hidden; margin-bottom:16px; }
+.progress-fill{ height:100%; background:linear-gradient(90deg,var(--flame),var(--flame-3)); width:0%; transition:width .3s ease; box-shadow:0 0 10px rgba(111,198,255,0.6); }
+
+.q-tag{ display:inline-block; background:var(--bg-2); border:1px solid var(--line); color:var(--flame-2); font-size:0.7rem; padding:4px 10px; border-radius:20px; margin-bottom:10px; }
+.q-text{ font-size:1.02rem; font-weight:600; line-height:1.5; margin-bottom:16px; }
+
+.opt{
+  display:block; width:100%; text-align:left;
+  background:var(--bg-2); border:1px solid var(--line); border-radius:12px;
+  padding:14px; margin-bottom:10px; color:var(--text); font-family:'Exo 2',sans-serif;
+  font-size:0.94rem; cursor:pointer; transition:border-color .15s ease, transform .08s ease, background .15s ease;
+}
+.opt:not(.disabled):hover{ border-color:var(--flame-2); background:#101f42; }
+.opt:not(.disabled):active{ transform:scale(0.985); }
+.opt .opt-letter{ color:var(--flame-2); font-weight:700; margin-right:8px; }
+.opt.correct{ background:linear-gradient(90deg,#0f3d24,#12522f); border-color:var(--pass); }
+.opt.wrong{ background:linear-gradient(90deg,#3d0f1a,#521221); border-color:var(--fail); }
+.opt.disabled{ pointer-events:none; opacity:0.9; }
+
+.feedback{ display:none; margin-top:4px; padding:14px; border-radius:12px; background:var(--bg-2); border:1px solid var(--line); font-size:0.87rem; line-height:1.55; }
+.feedback.show{ display:block; animation:fade-in .2s ease; }
+@keyframes fade-in{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+.feedback .fb-label{ font-family:'Orbitron',sans-serif; font-size:0.78rem; letter-spacing:1px; margin-bottom:6px; }
+.feedback.correct-fb .fb-label{ color:var(--pass); }
+.feedback.wrong-fb .fb-label{ color:var(--fail); }
+
+.nav-row{ display:flex; gap:10px; margin-top:14px; }
+.nav-row .start-btn{ flex:1; }
+
+/* ---------- Question navigator ---------- */
+.qnav-toggle{
+  position:fixed; right:16px; bottom:16px; z-index:50;
+  width:56px; height:56px; border-radius:50%;
+  background:linear-gradient(155deg, var(--flame), var(--flame-deep));
+  color:#03101f; border:none; box-shadow:0 6px 24px rgba(47,143,255,0.55);
+  font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.72rem;
+  transition:transform .15s ease;
+}
+.qnav-toggle:active{ transform:scale(0.9); }
+.qnav-panel{ position:fixed; inset:0; background:rgba(3,5,13,0.95); z-index:60; display:none; padding:20px 16px; overflow-y:auto; }
+.qnav-panel.show{ display:block; animation:fade-in .15s ease; }
+.qnav-panel h3{ font-family:'Orbitron',sans-serif; color:var(--flame-2); margin-bottom:14px; }
+.qnav-grid{ display:grid; grid-template-columns:repeat(8, 1fr); gap:6px; margin-bottom:16px; }
+.qnav-cell{
+  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  background:var(--bg-2); border:1px solid var(--line); border-radius:6px;
+  font-size:0.72rem; color:var(--muted); cursor:pointer; transition:transform .1s ease;
+}
+.qnav-cell:active{ transform:scale(0.85); }
+.qnav-cell.answered{ background:rgba(61,220,132,0.15); border-color:var(--pass); color:var(--pass); }
+.qnav-cell.flagged{ background:rgba(255,184,77,0.15); border-color:var(--warn); color:var(--warn); }
+.qnav-cell.current{ box-shadow:0 0 0 2px var(--flame-2); }
+.qnav-legend{ display:flex; gap:14px; font-size:0.75rem; color:var(--muted); margin-bottom:14px; flex-wrap:wrap; }
+.qnav-legend span{ display:flex; align-items:center; gap:5px; }
+.qnav-legend .dot{ width:10px; height:10px; border-radius:3px; display:inline-block; }
+.subject-block-label{ font-family:'Orbitron',sans-serif; font-size:0.75rem; color:var(--muted); margin:14px 0 6px; }
+
+/* ---------- Review screen ---------- */
+.review-item{ background:var(--bg-2); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:10px; }
+.review-item .r-q{ font-size:0.9rem; font-weight:600; margin-bottom:8px; }
+.review-item .r-your{ font-size:0.84rem; margin-bottom:4px; }
+.review-item .r-your.wrong{ color:var(--fail); }
+.review-item .r-your.right{ color:var(--pass); }
+.review-item .r-correct{ font-size:0.84rem; color:var(--pass); margin-bottom:8px; }
+.review-item .r-exp{ font-size:0.82rem; color:var(--muted); line-height:1.5; }
+
+/* ---------- Results ---------- */
+.score-circle{
+  width:154px; height:154px; border-radius:50%;
+  border:7px solid var(--flame);
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  margin:6px auto 20px; box-shadow:0 0 46px rgba(47,143,255,0.4), inset 0 0 20px rgba(47,143,255,0.15);
+  animation:score-pop .4s ease;
+}
+@keyframes score-pop{ from{ transform:scale(0.7); opacity:0; } to{ transform:scale(1); opacity:1; } }
+.score-num{ font-family:'Orbitron',sans-serif; font-size:2rem; font-weight:900; color:var(--flame-3); text-shadow:0 0 20px rgba(111,198,255,0.5); }
+.score-label{ font-size:0.72rem; color:var(--muted); }
+.subject-breakdown{ margin-top:6px; }
+.sb-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:0.88rem; }
+.sb-row:last-child{ border-bottom:none; }
+
+/* ---------- History ---------- */
+.hist-row{ background:var(--bg-2); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:10px; transition:border-color .15s ease; }
+.hist-row:hover{ border-color:var(--line-bright); }
+.hist-row .hr-top{ display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px; }
+.hist-row .hr-mode{ font-weight:700; color:var(--flame-2); }
+.hist-row .hr-date{ color:var(--muted); font-size:0.76rem; }
+.hist-row .hr-score{ font-family:'Orbitron',sans-serif; font-weight:700; font-size:1.1rem; }
+.weak-tag{ display:inline-block; background:rgba(255,84,112,0.12); border:1px solid var(--fail); color:var(--fail); font-size:0.74rem; padding:3px 10px; border-radius:20px; margin:3px 4px 0 0; }
+.strong-tag{ display:inline-block; background:rgba(61,220,132,0.12); border:1px solid var(--pass); color:var(--pass); font-size:0.74rem; padding:3px 10px; border-radius:20px; margin:3px 4px 0 0; }
+.empty-note{ color:var(--muted); font-size:0.9rem; text-align:center; padding:20px 0; }
+
+.back-link{ display:inline-block; color:var(--flame-2); text-decoration:none; font-size:0.88rem; margin-bottom:14px; transition:transform .12s ease; }
+.back-link:active{ transform:translateX(-3px); }
+
+.footer-note{ text-align:center; color:var(--muted); font-size:0.76rem; margin-top:18px; line-height:1.5; }
+
+.hidden{ display:none !important; }
+
+/* Accessible focus visibility across interactive elements */
+button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible{
+  outline:2px solid var(--flame-2); outline-offset:2px;
+}
+
+
+/* ---------- Install app bar (PWA) ---------- */
+.install-bar{
+  position:fixed; left:12px; right:12px; bottom:12px; z-index:90;
+  display:none; align-items:center; justify-content:space-between; gap:12px;
+  background:linear-gradient(90deg, var(--flame-deep), var(--flame));
+  border-radius:16px; padding:12px 14px;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom));
+  box-shadow:0 8px 28px rgba(47,143,255,0.45);
+  animation:install-slide-up .3s ease;
+}
+@keyframes install-slide-up{ from{ transform:translateY(20px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
+.install-bar.show{ display:flex; }
+.install-bar .ib-icon{
+  width:34px; height:34px; border-radius:9px; background:#03101f; color:var(--flame-3);
+  display:flex; align-items:center; justify-content:center; font-family:'Orbitron',sans-serif;
+  font-weight:900; font-size:1rem; flex-shrink:0;
+}
+.install-bar .ib-text{ flex:1; min-width:0; }
+.install-bar .ib-title{ color:#03101f; font-weight:700; font-size:0.86rem; font-family:'Exo 2',sans-serif; }
+.install-bar .ib-sub{ color:rgba(3,16,31,0.72); font-size:0.72rem; margin-top:1px; }
+.install-bar button.ib-btn{
+  background:#03101f; color:var(--flame-3); border:none; border-radius:10px;
+  padding:10px 16px; font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.78rem;
+  cursor:pointer; white-space:nowrap; flex-shrink:0; transition:transform .12s ease;
+}
+.install-bar button.ib-btn:active{ transform:scale(0.93); }
+/* keep the Full CBT question-navigator button clear of the install bar */
+.qnav-toggle{ bottom:88px !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" class="back-link">← Back to F.A.S.P.A.S</a>
+
+  <div class="brand-row">
+    <div class="brand-mark">F</div>
+    <div>
+      <div class="brand-name">Mathematics</div>
+      <div class="brand-sub" id="qCountSub">Loading question bank…</div>
+    </div>
+  </div>
+
+  <!-- ===================== PICK SCREEN ===================== -->
+  <div id="screen-pick" class="card">
+    <h2>Choose Your Mode</h2>
+    <div class="mode-grid">
+      <div class="mode-tile selected" data-mode="topics">
+        <div class="m-title">📚 Topics</div>
+        <div class="m-desc">Practice one topic at a time</div>
+      </div>
+      <div class="mode-tile" data-mode="years">
+        <div class="m-title">📅 Years</div>
+        <div class="m-desc">Full past-year paper, timed</div>
+      </div>
+    </div>
+
+    <select id="topicSelect" class="select-field"></select>
+    <select id="yearSelect" class="select-field hidden"></select>
+
+    <div class="toggle-row" id="timerToggleRow">
+      <div>
+        <div class="t-label">Timed practice (40s/question)</div>
+        <div class="t-note">Off lets you take your time while learning a topic</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="timerToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <button class="start-btn" id="startBtn">START</button>
+  </div>
+
+  <!-- ===================== EXAM SCREEN ===================== -->
+  <div id="screen-exam" class="card hidden">
+    <div class="exam-top hidden" id="examTop">
+      <span id="qCounter">Q 1/10</span>
+      <span class="timer-badge hidden" id="timerBadge">⏱ 40s</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="q-tag" id="qTag"></div>
+    <div class="q-text" id="qText"></div>
+    <div id="optsWrap"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-label" id="fbLabel"></div>
+      <div id="fbExp"></div>
+    </div>
+    <div class="nav-row">
+      <button class="start-btn ghost hidden" id="prevBtn">← Previous</button>
+      <button class="start-btn hidden" id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <!-- ===================== RESULTS SCREEN ===================== -->
+  <div id="screen-results" class="card hidden">
+    <h2>Session Complete</h2>
+    <div class="score-circle">
+      <div class="score-num" id="finalScore">0/0</div>
+      <div class="score-label" id="finalPct">0%</div>
+    </div>
+    <div class="subject-breakdown" id="subjectBreakdown"></div>
+    <button class="start-btn" style="margin-top:16px;" onclick="location.reload()">Practice Again</button>
+    <a href="index.html" class="start-btn ghost" style="margin-top:10px; display:block; text-align:center; text-decoration:none;">Back to Home</a>
+  </div>
+
+</div>
+
+<script>
+/* PHYSICS — starter sample bank. Expand this array with real JAMB
+   Physics questions, tagging each with a `topic` (for Topics mode)
+   and/or a `year` (for Years mode). A question can carry both. */
+
+var SUBJECT_BANK = [
+  {
+    topic: "Number Bases", year: 2021,
+    q: "Convert 235 in base 6 to base 10.",
+    options: ["95", "89", "101", "87"], correct: 0,
+    explanation: "235 (base 6) = (2×6²) + (3×6¹) + (5×6⁰) = (2×36) + (3×6) + 5 = 72 + 18 + 5 = <b>95</b>."
+  },
+  {
+    topic: "Indices, Logarithms and Surds", year: 2020,
+    q: "Simplify: log₁₀ 5 + log₁₀ 2",
+    options: ["log₁₀ 7", "log₁₀ 10 = 1", "log₁₀ 3", "10"], correct: 1,
+    explanation: "Using the log rule logA + logB = log(AB): log 5 + log 2 = log(5×2) = log 10 = <b>1</b>."
+  },
+  {
+    topic: "Sets", year: 2019,
+    q: "If P = {1,2,3,4,5} and Q = {3,4,5,6,7}, find P ∩ Q.",
+    options: ["{1,2,6,7}", "{3,4,5}", "{1,2,3,4,5,6,7}", "{}"], correct: 1,
+    explanation: "P ∩ Q (intersection) contains elements common to BOTH sets: <b>{3,4,5}</b>."
+  },
+  {
+    topic: "Quadratic Equations", year: 2022,
+    q: "Solve for x: x² − 5x + 6 = 0",
+    options: ["x = 2 or 3", "x = -2 or -3", "x = 1 or 6", "x = -1 or -6"], correct: 0,
+    explanation: "Factorize: (x-2)(x-3) = 0, so x = 2 or x = <b>3</b> — matching option (x = 2 or 3)."
+  },
+  {
+    topic: "Variation", year: 2021,
+    q: "y varies directly as x. When x = 4, y = 20. Find y when x = 7.",
+    options: ["35", "28", "40", "5"], correct: 0,
+    explanation: "y = kx. From x=4,y=20: k = 20/4 = 5. When x=7: y = 5×7 = <b>35</b>."
+  },
+  {
+    topic: "Euclidean Geometry", year: 2018,
+    q: "The sum of interior angles of a hexagon is",
+    options: ["360°", "540°", "720°", "900°"], correct: 2,
+    explanation: "Sum of interior angles = (n-2)×180°, where n=6: (6-2)×180° = 4×180° = <b>720°</b>."
+  },
+  {
+    topic: "Trigonometry", year: 2020,
+    q: "Find the value of sin 30°",
+    options: ["1/2", "√3/2", "1", "0"], correct: 0,
+    explanation: "sin 30° is a standard trigonometric value equal to <b>1/2</b>."
+  },
+  {
+    topic: "Differentiation", year: 2022,
+    q: "Find dy/dx if y = 3x² + 4x - 5",
+    options: ["6x + 4", "3x + 4", "6x - 5", "x² + 4x"], correct: 0,
+    explanation: "Differentiate term by term: d/dx(3x²)=6x, d/dx(4x)=4, d/dx(-5)=0. Sum: <b>6x + 4</b>."
+  },
+  {
+    topic: "Statistics", year: 2019,
+    q: "Find the mean of: 2, 4, 6, 8, 10",
+    options: ["6", "5", "8", "30"], correct: 0,
+    explanation: "Mean = sum of values ÷ count = (2+4+6+8+10)/5 = 30/5 = <b>6</b>."
+  },
+  {
+    topic: "Probability", year: 2021,
+    q: "A bag contains 3 red and 5 blue balls. A ball is picked at random. Find the probability that it is red.",
+    options: ["3/8", "5/8", "3/5", "1/2"], correct: 0,
+    explanation: "P(red) = number of red balls / total balls = 3/(3+5) = <b>3/8</b>."
+  }
+];
+
+</script>
+<script>
+/* ============================================================
+   F.A.S.P.A.S — SHARED CBT ENGINE
+   Used by every subject page (physics.html, chemistry.html,
+   biology.html, english.html) and by fullcbt.html.
+
+   Expects the including page to already have loaded a data file
+   that defines a global `SUBJECT_BANK` array (for subject pages)
+   with objects shaped like:
+     { topic: "Kinematics", year: 2021, q: "...", options: [...],
+       correct: 0, explanation: "..." }
+   `year` may be null for topic-only items and vice versa — a
+   question can be tagged with both.
+
+   fullcbt.html instead loads all four subject banks and calls
+   startFullCbt() directly.
+   ============================================================ */
+
+const TIMER_SECONDS_PRACTICE = 40; // per-question pace target (matches 180Q/2hr JAMB rhythm)
+const FULLCBT_SECONDS = 2 * 60 * 60; // 2 hours
+const FULLCBT_WARN_1 = 30 * 60; // 30 min left
+const FULLCBT_WARN_2 = 10 * 60; // 10 min left
+
+let state = {
+  mode: null,          // 'topics' | 'years' | 'fullcbt'
+  subject: null,       // subject name for single-subject modes
+  pool: [],            // active question list for this run
+  idx: 0,
+  answers: [],         // { chosen, correct, flagged, subject, topic }
+  score: 0,
+  timerId: null,
+  perQuestionSeconds: TIMER_SECONDS_PRACTICE,
+  timerEnabled: true,
+  overallSecondsLeft: 0,
+  overallTimerId: null,
+  autosaveKey: null,
+};
+
+/* ---------------- Utilities ---------------- */
+
+function fisherYates(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function shuffleOptions(q){
+  const idxArr = q.options.map((_,i)=>i);
+  const shuffled = fisherYates(idxArr);
+  return {
+    ...q,
+    options: shuffled.map(i=>q.options[i]),
+    correct: shuffled.indexOf(q.correct)
+  };
+}
+
+function fmtTime(totalSeconds){
+  const m = Math.floor(totalSeconds/60);
+  const s = totalSeconds%60;
+  return `${m}:${s<10?'0':''}${s}`;
+}
+
+function $(id){ return document.getElementById(id); }
+
+/* ---------------- Topics / Years mode (single subject) ---------------- */
+
+function startTopicsMode(subjectName, bank, topic, timerOn){
+  const pool = fisherYates(bank.filter(q=>q.topic===topic)).map(shuffleOptions);
+  if(pool.length===0){ alert('No questions found for this topic yet.'); return; }
+  state = {
+    mode:'topics', subject:subjectName, pool, idx:0, answers:[], score:0,
+    perQuestionSeconds: TIMER_SECONDS_PRACTICE, timerEnabled: !!timerOn,
+    autosaveKey: `faspas_autosave_${subjectName}_topics_${topic}`
+  };
+  restoreAutosaveIfAny();
+  showExamScreen();
+  renderPracticeQuestion();
+}
+
+function startYearsMode(subjectName, bank, year){
+  const pool = fisherYates(bank.filter(q=>String(q.year)===String(year))).map(shuffleOptions);
+  if(pool.length===0){ alert('No questions found for this year yet.'); return; }
+  state = {
+    mode:'years', subject:subjectName, pool, idx:0, answers:[], score:0,
+    perQuestionSeconds: TIMER_SECONDS_PRACTICE, timerEnabled:true,
+    autosaveKey: `faspas_autosave_${subjectName}_years_${year}`
+  };
+  restoreAutosaveIfAny();
+  showExamScreen();
+  renderPracticeQuestion();
+}
+
+function renderPracticeQuestion(){
+  clearInterval(state.timerId);
+  const q = state.pool[state.idx];
+  $('examTop').classList.remove('hidden');
+  $('qCounter').textContent = `Q ${state.idx+1}/${state.pool.length}`;
+  $('progressFill').style.width = `${(state.idx/state.pool.length)*100}%`;
+  $('qTag').textContent = q.topic ? q.topic : (q.year ? `${q.year} Paper` : state.subject);
+  $('qText').textContent = q.q;
+  renderOptions(q, state.answers[state.idx]);
+  $('feedback').classList.remove('show','correct-fb','wrong-fb');
+  $('nextBtn').classList.toggle('hidden', !state.answers[state.idx]);
+  $('prevBtn').classList.toggle('hidden', state.idx===0);
+  if(state.answers[state.idx]) showFeedback(q, state.answers[state.idx].chosen);
+
+  if(state.timerEnabled && !state.answers[state.idx]){
+    let secondsLeft = state.perQuestionSeconds;
+    updateTimerBadge(secondsLeft);
+    state.timerId = setInterval(()=>{
+      secondsLeft--;
+      updateTimerBadge(secondsLeft);
+      if(secondsLeft<=0){
+        clearInterval(state.timerId);
+        if(!state.answers[state.idx]) selectAnswer(-1); // time-out = unanswered, moves feedback state
+      }
+    },1000);
+  } else {
+    $('timerBadge').classList.add('hidden');
+  }
+}
+
+function updateTimerBadge(s){
+  const el = $('timerBadge');
+  el.classList.remove('hidden');
+  el.textContent = `⏱ ${s}s`;
+  el.classList.toggle('low', s<=15 && s>5);
+  el.classList.toggle('critical', s<=5);
+}
+
+function renderOptions(q, existingAnswer){
+  const container = $('optsWrap');
+  container.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}.</span>${opt}`;
+    if(existingAnswer){
+      btn.classList.add('disabled');
+      if(i===q.correct) btn.classList.add('correct');
+      else if(i===existingAnswer.chosen) btn.classList.add('wrong');
+    } else {
+      btn.addEventListener('click', ()=>selectAnswer(i));
+    }
+    container.appendChild(btn);
+  });
+}
+
+function selectAnswer(choiceIdx){
+  clearInterval(state.timerId);
+  const q = state.pool[state.idx];
+  const isCorrect = choiceIdx===q.correct;
+  state.answers[state.idx] = { chosen: choiceIdx, correct: q.correct, isCorrect, subject: state.subject, topic: q.topic || q.year };
+  if(isCorrect) state.score++;
+  renderOptions(q, state.answers[state.idx]);
+  showFeedback(q, choiceIdx);
+  $('nextBtn').classList.remove('hidden');
+  autosave();
+}
+
+function showFeedback(q, chosenIdx){
+  const isCorrect = chosenIdx===q.correct;
+  const fb = $('feedback');
+  fb.classList.add('show', isCorrect?'correct-fb':'wrong-fb');
+  $('fbLabel').textContent = chosenIdx===-1 ? '⏱ TIME UP' : (isCorrect ? '✔ CORRECT' : '✘ INCORRECT');
+  $('fbExp').innerHTML = q.explanation || 'No explanation provided yet for this question.';
+}
+
+function nextQuestion(){
+  if(state.idx < state.pool.length-1){
+    state.idx++;
+    renderPracticeQuestion();
+  } else {
+    finishPractice();
+  }
+}
+function prevQuestion(){
+  if(state.idx>0){
+    state.idx--;
+    renderPracticeQuestion();
+  }
+}
+
+function finishPractice(){
+  clearInterval(state.timerId);
+  clearAutosave();
+  recordHistory({
+    modeLabel: `${state.subject} — ${state.mode==='topics'?'Topics':'Years'} Practice`,
+    score: state.score,
+    total: state.pool.length,
+    breakdown: buildTopicBreakdown(state.answers),
+  });
+  showResultsScreen();
+}
+
+/* ---------------- Full CBT Mode ---------------- */
+
+function startFullCbt(banks){
+  // banks = { english: [...], physics: [...], chemistry: [...], biology: [...] }
+  const english = fisherYates(banks.english).slice(0,60);
+  const physics = fisherYates(banks.physics).slice(0,40);
+  const chemistry = fisherYates(banks.chemistry).slice(0,40);
+  const biology = fisherYates(banks.biology).slice(0,40);
+
+  const tagged = [
+    ...english.map(q=>({...q, subject:'English'})),
+    ...physics.map(q=>({...q, subject:'Physics'})),
+    ...chemistry.map(q=>({...q, subject:'Chemistry'})),
+    ...biology.map(q=>({...q, subject:'Biology'})),
+  ].map(shuffleOptions);
+
+  state = {
+    mode:'fullcbt', subject:'Full CBT', pool: tagged, idx:0, answers:new Array(tagged.length).fill(null),
+    score:0, timerEnabled:true, autosaveKey:'faspas_autosave_fullcbt',
+    overallSecondsLeft: FULLCBT_SECONDS,
+  };
+
+  restoreAutosaveIfAny(true);
+  showExamScreen();
+  $('qnavToggle').classList.remove('hidden');
+  renderFullCbtQuestion();
+  startOverallTimer();
+}
+
+function startOverallTimer(){
+  clearInterval(state.overallTimerId);
+  updateOverallTimerBadge();
+  state.overallTimerId = setInterval(()=>{
+    state.overallSecondsLeft--;
+    updateOverallTimerBadge();
+    if(state.overallSecondsLeft===FULLCBT_WARN_1){
+      flashWarning('⚠️ 30 minutes remaining');
+    } else if(state.overallSecondsLeft===FULLCBT_WARN_2){
+      flashWarning('⚠️ 10 minutes remaining — wrap up!');
+    } else if(state.overallSecondsLeft<=0){
+      clearInterval(state.overallTimerId);
+      finishFullCbt(true);
+    }
+    autosave();
+  },1000);
+}
+
+function updateOverallTimerBadge(){
+  const el = $('timerBadge');
+  el.classList.remove('hidden');
+  el.textContent = `⏱ ${fmtTime(state.overallSecondsLeft)}`;
+  el.classList.toggle('low', state.overallSecondsLeft<=FULLCBT_WARN_1 && state.overallSecondsLeft>FULLCBT_WARN_2);
+  el.classList.toggle('critical', state.overallSecondsLeft<=FULLCBT_WARN_2);
+}
+
+function flashWarning(msg){
+  const banner = $('warnBanner');
+  banner.textContent = msg;
+  banner.classList.remove('hidden');
+  setTimeout(()=>banner.classList.add('hidden'), 6000);
+}
+
+function renderFullCbtQuestion(){
+  const q = state.pool[state.idx];
+  $('examTop').classList.remove('hidden');
+  $('qCounter').textContent = `Q ${state.idx+1}/${state.pool.length}`;
+  $('progressFill').style.width = `${(state.idx/state.pool.length)*100}%`;
+  $('qTag').textContent = `${q.subject} — ${q.topic || ''}`;
+  $('qText').textContent = q.q;
+  const existing = state.answers[state.idx];
+  renderFullCbtOptions(q, existing);
+  $('feedback').classList.remove('show'); // no feedback shown during Full CBT — review happens at the end
+  $('nextBtn').classList.toggle('hidden', state.idx===state.pool.length-1);
+  $('prevBtn').classList.toggle('hidden', state.idx===0);
+  renderQnav();
+}
+
+function renderFullCbtOptions(q, existing){
+  const container = $('optsWrap');
+  container.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    if(existing && existing.chosen===i) btn.classList.add('selected-flag');
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}.</span>${opt}`;
+    if(existing && existing.chosen===i){
+      btn.style.borderColor = 'var(--flame)';
+      btn.style.background = 'rgba(47,143,255,0.15)';
+    }
+    btn.addEventListener('click', ()=>selectFullCbtAnswer(i));
+    container.appendChild(btn);
+  });
+}
+
+function selectFullCbtAnswer(choiceIdx){
+  const q = state.pool[state.idx];
+  state.answers[state.idx] = {
+    chosen: choiceIdx, correct: q.correct, isCorrect: choiceIdx===q.correct,
+    subject: q.subject, topic: q.topic, flagged: state.answers[state.idx]?.flagged || false
+  };
+  renderFullCbtOptions(q, state.answers[state.idx]);
+  renderQnav();
+  autosave();
+}
+
+function toggleFlag(){
+  const existing = state.answers[state.idx] || {};
+  existing.flagged = !existing.flagged;
+  state.answers[state.idx] = existing;
+  renderQnav();
+  autosave();
+}
+
+function goToQuestion(i){
+  state.idx = i;
+  renderFullCbtQuestion();
+  closeQnav();
+}
+
+function renderQnav(){
+  const grid = $('qnavGrid');
+  grid.innerHTML = '';
+  const subjects = [...new Set(state.pool.map(q=>q.subject))];
+  subjects.forEach(subj=>{
+    const label = document.createElement('div');
+    label.className = 'subject-block-label';
+    label.textContent = subj;
+    grid.appendChild(label);
+    const subGrid = document.createElement('div');
+    subGrid.className = 'qnav-grid';
+    state.pool.forEach((q,i)=>{
+      if(q.subject!==subj) return;
+      const cell = document.createElement('div');
+      cell.className = 'qnav-cell';
+      const ans = state.answers[i];
+      if(ans && ans.chosen!==undefined && ans.chosen!==null) cell.classList.add('answered');
+      if(ans && ans.flagged) cell.classList.add('flagged');
+      if(i===state.idx) cell.classList.add('current');
+      cell.textContent = i+1;
+      cell.addEventListener('click', ()=>goToQuestion(i));
+      subGrid.appendChild(cell);
+    });
+    grid.appendChild(subGrid);
+  });
+}
+
+function openQnav(){ $('qnavPanel').classList.add('show'); renderQnav(); }
+function closeQnav(){ $('qnavPanel').classList.remove('show'); }
+
+function nextFullCbtQuestion(){
+  if(state.idx < state.pool.length-1){ state.idx++; renderFullCbtQuestion(); }
+}
+function prevFullCbtQuestion(){
+  if(state.idx>0){ state.idx--; renderFullCbtQuestion(); }
+}
+
+function confirmSubmitFullCbt(){
+  const unanswered = state.answers.filter(a=>!a || a.chosen===undefined || a.chosen===null).length;
+  const msg = unanswered>0
+    ? `You have ${unanswered} unanswered question(s). Submit anyway?`
+    : `Submit your Full CBT attempt now?`;
+  if(confirm(msg)) finishFullCbt(false);
+}
+
+function finishFullCbt(autoSubmitted){
+  clearInterval(state.overallTimerId);
+  clearAutosave();
+  state.score = state.answers.filter(a=>a && a.isCorrect).length;
+  const breakdown = buildSubjectBreakdown();
+  recordHistory({
+    modeLabel: autoSubmitted ? 'Full CBT (auto-submitted)' : 'Full CBT',
+    score: state.score,
+    total: state.pool.length,
+    breakdown: buildTopicBreakdown(state.answers.filter(Boolean)),
+    subjectBreakdown: breakdown,
+  });
+  showReviewScreen();
+}
+
+function buildSubjectBreakdown(){
+  const bySubject = {};
+  state.pool.forEach((q,i)=>{
+    const s = q.subject;
+    if(!bySubject[s]) bySubject[s] = {correct:0,total:0};
+    bySubject[s].total++;
+    if(state.answers[i] && state.answers[i].isCorrect) bySubject[s].correct++;
+  });
+  return bySubject;
+}
+
+/* ---------------- Review screen (Full CBT only) ---------------- */
+
+function showReviewScreen(){
+  $('screen-exam').classList.add('hidden');
+  $('qnavToggle').classList.add('hidden');
+  $('screen-review').classList.remove('hidden');
+  const sb = buildSubjectBreakdown();
+  $('reviewScore').textContent = `${state.score}/${state.pool.length}`;
+  const bd = $('subjectBreakdown');
+  bd.innerHTML = '';
+  Object.keys(sb).forEach(subj=>{
+    const row = document.createElement('div');
+    row.className = 'sb-row';
+    row.innerHTML = `<span>${subj}</span><span>${sb[subj].correct}/${sb[subj].total}</span>`;
+    bd.appendChild(row);
+  });
+  const list = $('reviewList');
+  list.innerHTML = '';
+  state.pool.forEach((q,i)=>{
+    const ans = state.answers[i];
+    const item = document.createElement('div');
+    item.className = 'review-item';
+    const letters = ['A','B','C','D'];
+    const yourAnswer = ans && ans.chosen!==undefined && ans.chosen!==null
+      ? `${letters[ans.chosen]}. ${q.options[ans.chosen]}`
+      : '(no answer)';
+    const isRight = ans && ans.isCorrect;
+    item.innerHTML = `
+      <div class="r-q">${i+1}. [${q.subject}] ${q.q}</div>
+      <div class="r-your ${isRight?'right':'wrong'}">Your answer: ${yourAnswer}</div>
+      <div class="r-correct">Correct answer: ${letters[q.correct]}. ${q.options[q.correct]}</div>
+      <div class="r-exp">${q.explanation || ''}</div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+/* ---------------- Autosave (mid-session resilience) ---------------- */
+
+function autosave(){
+  if(!state.autosaveKey) return;
+  try{
+    localStorage.setItem(state.autosaveKey, JSON.stringify({
+      idx: state.idx, answers: state.answers, score: state.score,
+      overallSecondsLeft: state.overallSecondsLeft, pool: state.pool, mode: state.mode, subject: state.subject
+    }));
+  }catch(e){ console.warn('autosave failed', e); }
+}
+
+function clearAutosave(){
+  if(state.autosaveKey) localStorage.removeItem(state.autosaveKey);
+}
+
+function restoreAutosaveIfAny(isFullCbt){
+  if(!state.autosaveKey) return;
+  try{
+    const raw = localStorage.getItem(state.autosaveKey);
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    if(!saved || !saved.pool || saved.pool.length !== state.pool.length) return;
+    if(confirm('You have an unfinished session saved. Resume where you left off?')){
+      state.idx = saved.idx;
+      state.answers = saved.answers;
+      state.score = saved.score;
+      state.pool = saved.pool;
+      if(isFullCbt) state.overallSecondsLeft = saved.overallSecondsLeft;
+    } else {
+      clearAutosave();
+    }
+  }catch(e){ console.warn('restore failed', e); }
+}
+
+/* ---------------- History (localStorage, per-mode score log) ---------------- */
+
+function buildTopicBreakdown(answers){
+  const byTopic = {};
+  answers.forEach(a=>{
+    if(!a) return;
+    const key = a.topic || 'General';
+    if(!byTopic[key]) byTopic[key] = {correct:0,total:0};
+    byTopic[key].total++;
+    if(a.isCorrect) byTopic[key].correct++;
+  });
+  return byTopic;
+}
+
+function recordHistory(entry){
+  try{
+    const raw = localStorage.getItem('faspas_history');
+    const history = raw ? JSON.parse(raw) : [];
+    history.unshift({
+      ...entry,
+      date: new Date().toISOString(),
+    });
+    localStorage.setItem('faspas_history', JSON.stringify(history.slice(0,200)));
+  }catch(e){ console.warn('history save failed', e); }
+}
+
+/* ---------------- Screen helpers ---------------- */
+
+function showExamScreen(){
+  $('screen-pick')?.classList.add('hidden');
+  $('screen-exam').classList.remove('hidden');
+  $('screen-results')?.classList.add('hidden');
+  $('screen-review')?.classList.add('hidden');
+}
+function showResultsScreen(){
+  $('screen-exam').classList.add('hidden');
+  $('screen-results').classList.remove('hidden');
+  $('finalScore').textContent = `${state.score}/${state.pool.length}`;
+  const pct = Math.round((state.score/state.pool.length)*100);
+  $('finalPct').textContent = `${pct}%`;
+  const bd = $('subjectBreakdown');
+  if(bd){
+    bd.innerHTML = '';
+    const topics = buildTopicBreakdown(state.answers);
+    Object.keys(topics).forEach(t=>{
+      const row = document.createElement('div');
+      row.className = 'sb-row';
+      row.innerHTML = `<span>${t}</span><span>${topics[t].correct}/${topics[t].total}</span>`;
+      bd.appendChild(row);
+    });
+  }
+}
+
+</script>
+<script>
+const SUBJECT_NAME = "Mathematics";
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const topics = [...new Set(SUBJECT_BANK.filter(q=>q.topic).map(q=>q.topic))];
+  const years = [...new Set(SUBJECT_BANK.filter(q=>q.year).map(q=>q.year))].sort((a,b)=>b-a);
+
+  document.getElementById('qCountSub').textContent = `${SUBJECT_BANK.length} questions · ${topics.length} topics · ${years.length} years`;
+
+  const topicSelect = document.getElementById('topicSelect');
+  topics.forEach(t=>{
+    const opt = document.createElement('option');
+    opt.value = t; opt.textContent = t;
+    topicSelect.appendChild(opt);
+  });
+
+  const yearSelect = document.getElementById('yearSelect');
+  years.forEach(y=>{
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = `${y} Paper`;
+    yearSelect.appendChild(opt);
+  });
+
+  let selectedMode = 'topics';
+  document.querySelectorAll('.mode-tile').forEach(tile=>{
+    tile.addEventListener('click', ()=>{
+      document.querySelectorAll('.mode-tile').forEach(t=>t.classList.remove('selected'));
+      tile.classList.add('selected');
+      selectedMode = tile.dataset.mode;
+      topicSelect.classList.toggle('hidden', selectedMode!=='topics');
+      yearSelect.classList.toggle('hidden', selectedMode!=='years');
+      document.getElementById('timerToggleRow').classList.toggle('hidden', selectedMode!=='topics');
+    });
+  });
+
+  document.getElementById('startBtn').addEventListener('click', ()=>{
+    if(selectedMode==='topics'){
+      const timerOn = document.getElementById('timerToggle').checked;
+      startTopicsMode(SUBJECT_NAME, SUBJECT_BANK, topicSelect.value, timerOn);
+    } else {
+      startYearsMode(SUBJECT_NAME, SUBJECT_BANK, yearSelect.value);
+    }
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+  document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+});
+</script>
+
+<!-- PWA install bar: our own trigger, not Chrome's native mini-infobar -->
+<div class="install-bar" id="installBar">
+  <div class="ib-icon">F</div>
+  <div class="ib-text">
+    <div class="ib-title" id="installTitle">Install the F.A.S.P.A.S app</div>
+    <div class="ib-sub" id="installSub">Works offline, opens like a real app</div>
+  </div>
+  <button class="ib-btn" id="installBtn">Install</button>
+</div>
+
+
+<script>
+(function(){
+  let deferredPrompt = null;
+  let autoPromptOnceReady = false;
+  const bar = document.getElementById('installBar');
+  const btn = document.getElementById('installBtn');
+  const subEl = document.getElementById('installSub');
+  const titleEl = document.getElementById('installTitle');
+
+  function isStandalone(){
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+  function isIOS(){
+    return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+  }
+
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW registration failed:', e));
+  }
+
+  if(!isStandalone()){
+    // Show our own button immediately — don't wait around for Chrome's own timing/heuristics.
+    bar.classList.add('show');
+    if(isIOS()){
+      titleEl.textContent = 'Add F.A.S.P.A.S to Home Screen';
+      subEl.textContent = 'Tap Share, then "Add to Home Screen"';
+      btn.textContent = 'How?';
+    }
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if(!isStandalone()) bar.classList.add('show');
+    if(autoPromptOnceReady){
+      autoPromptOnceReady = false;
+      triggerInstall();
+    }
+  });
+
+  async function triggerInstall(){
+    if(isIOS()){
+      alert('On iPhone/iPad:\n1. Tap the Share icon in Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add"');
+      return;
+    }
+    if(!deferredPrompt){
+      // Chrome hasn't fired the event yet — queue the intent and let the user know.
+      btn.textContent = 'Preparing…';
+      autoPromptOnceReady = true;
+      setTimeout(()=>{ if(btn.textContent==='Preparing…') btn.textContent = 'Install'; }, 6000);
+      return;
+    }
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    if(choice && choice.outcome === 'accepted'){
+      bar.classList.remove('show');
+    }
+  }
+
+  btn.addEventListener('click', triggerInstall);
+
+  window.addEventListener('appinstalled', () => {
+    bar.classList.remove('show');
+    deferredPrompt = null;
+  });
+})();
+</script>
+
+</body>
+</html>
