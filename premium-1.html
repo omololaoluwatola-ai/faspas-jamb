@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a4fc4">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Go Premium — F.A.S.P.A.S</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="auth-guard.js"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<style>
+:root{
+  --bg-0:#03050d; --bg-1:#070d1e; --bg-2:#0d1730;
+  --panel:#0f1c3a; --line:#1e3260; --line-bright:#2f4d8f;
+  --flame:#2f8fff; --flame-2:#6fc6ff; --flame-3:#bfeaff; --flame-deep:#0a4fc4;
+  --text:#eaf3ff; --muted:#7d92ba; --pass:#3ddc84; --fail:#ff5470;
+  --radius:18px; --radius-sm:12px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  background:var(--bg-0); color:var(--text); font-family:'Exo 2',sans-serif;
+  min-height:100vh; padding:24px 16px 60px;
+}
+.wrap{ max-width:420px; margin:0 auto; }
+.back-link{ display:inline-block; color:var(--flame-2); text-decoration:none; font-size:0.88rem; margin-bottom:16px; }
+.hero-mark{
+  width:76px; height:76px; border-radius:20px; margin:0 auto 14px;
+  background:linear-gradient(155deg, var(--flame-deep) 0%, var(--flame) 55%, var(--flame-3) 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Orbitron',sans-serif; font-weight:900; font-size:2.2rem; color:#03101f;
+  box-shadow:0 0 40px rgba(47,143,255,0.5);
+}
+.title{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:1.4rem; text-align:center; margin-bottom:4px; }
+.sub{ text-align:center; color:var(--muted); font-size:0.86rem; margin-bottom:24px; }
+
+.status-card{
+  background:linear-gradient(180deg, var(--panel), var(--bg-1));
+  border:1px solid var(--line); border-radius:var(--radius); padding:20px; margin-bottom:16px;
+  text-align:center;
+}
+.status-badge{
+  display:inline-block; padding:6px 16px; border-radius:20px; font-family:'Orbitron',sans-serif;
+  font-weight:700; font-size:0.78rem; margin-bottom:8px;
+}
+.status-badge.free{ background:rgba(255,184,77,0.15); color:#ffb84d; border:1px solid #ffb84d; }
+.status-badge.premium{ background:rgba(61,220,132,0.15); color:var(--pass); border:1px solid var(--pass); }
+.status-detail{ color:var(--muted); font-size:0.84rem; }
+
+.plan-card{
+  background:linear-gradient(180deg, var(--panel), var(--bg-1));
+  border:1px solid var(--line-bright); border-radius:var(--radius); padding:24px 20px;
+  text-align:center; box-shadow:0 0 30px rgba(47,143,255,0.1);
+}
+.price{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:2.2rem; color:var(--flame-3); }
+.price span{ font-size:1rem; color:var(--muted); font-weight:400; }
+.perks{ text-align:left; margin:20px 0; }
+.perk{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; font-size:0.9rem; }
+.perk .check{ color:var(--pass); flex-shrink:0; }
+
+.pay-btn{
+  width:100%; padding:16px; margin-top:4px;
+  background:linear-gradient(90deg, var(--flame-deep), var(--flame));
+  border:none; border-radius:var(--radius-sm); color:#03101f;
+  font-family:'Orbitron',sans-serif; font-weight:700; font-size:1rem; cursor:pointer;
+  transition:transform .12s ease;
+}
+.pay-btn:active{ transform:scale(0.97); }
+.pay-btn:disabled{ opacity:0.5; }
+
+.msg{ text-align:center; font-size:0.84rem; margin-top:14px; padding:10px; border-radius:10px; display:none; }
+.msg.show{ display:block; }
+.msg.success{ background:rgba(61,220,132,0.12); color:var(--pass); border:1px solid var(--pass); }
+.msg.error{ background:rgba(255,84,112,0.12); color:var(--fail); border:1px solid var(--fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="index.html" class="back-link">← Back to F.A.S.P.A.S</a>
+
+  <div class="hero-mark">F</div>
+  <div class="title">Go Premium</div>
+  <div class="sub">Unlock everything, no more limits</div>
+
+  <div class="status-card">
+    <div class="status-badge free" id="statusBadge">Loading…</div>
+    <div class="status-detail" id="statusDetail"></div>
+  </div>
+
+  <div class="plan-card" id="planCard">
+    <div class="price">₦3,000 <span>/ 3 months</span></div>
+    <div class="perks">
+      <div class="perk"><span class="check">✔</span> Unlimited practice questions — every subject, no 10-question cap</div>
+      <div class="perk"><span class="check">✔</span> Full CBT Mode unlocked — real 2-hour timed mock exams</div>
+      <div class="perk"><span class="check">✔</span> All Topics &amp; Years content, past papers included</div>
+      <div class="perk"><span class="check">✔</span> Score history &amp; weak-topic tracking</div>
+    </div>
+    <button class="pay-btn" id="payBtn">Subscribe Now — ₦3,000</button>
+    <div class="msg" id="msgBox"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { auth } from './firebase-config.js';
+  import {
+    getFirestore, doc, getDoc
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+  import {
+    getFunctions, httpsCallable
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-functions.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  const db = getFirestore();
+  const functions = getFunctions();
+  const statusBadge = document.getElementById('statusBadge');
+  const statusDetail = document.getElementById('statusDetail');
+  const payBtn = document.getElementById('payBtn');
+  const msgBox = document.getElementById('msgBox');
+
+  // TODO: replace with your real Paystack PUBLIC key (safe to expose client-side —
+  // never put your Paystack SECRET key anywhere in this file or any client-side code).
+  const PAYSTACK_PUBLIC_KEY = 'pk_test_REPLACE_ME';
+
+  function showMsg(text, type){
+    msgBox.textContent = text;
+    msgBox.className = `msg show ${type}`;
+  }
+
+  function isPremiumActive(userData){
+    if(!userData || userData.plan !== 'premium' || !userData.premiumUntil) return false;
+    const until = userData.premiumUntil.toMillis ? userData.premiumUntil.toMillis() : new Date(userData.premiumUntil).getTime();
+    return until > Date.now();
+  }
+
+  let currentUser = null;
+
+  onAuthStateChanged(auth, async (user) => {
+    if(!user) return; // auth-guard.js already redirects to login before this fires
+    currentUser = user;
+    try{
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      const data = snap.exists() ? snap.data() : { plan: 'free', premiumUntil: null };
+      if(isPremiumActive(data)){
+        statusBadge.textContent = 'PREMIUM';
+        statusBadge.className = 'status-badge premium';
+        const until = data.premiumUntil.toMillis ? new Date(data.premiumUntil.toMillis()) : new Date(data.premiumUntil);
+        statusDetail.textContent = `Active until ${until.toDateString()}`;
+        payBtn.textContent = 'Renew for another 3 months — ₦3,000';
+      } else {
+        statusBadge.textContent = 'FREE PLAN';
+        statusBadge.className = 'status-badge free';
+        statusDetail.textContent = '10 free questions per subject, Full CBT Mode locked';
+      }
+    }catch(e){
+      statusDetail.textContent = 'Could not load your current plan status.';
+      console.warn(e);
+    }
+  });
+
+  payBtn.addEventListener('click', () => {
+    if(!currentUser){ showMsg('Please wait for sign-in to finish loading.', 'error'); return; }
+    payBtn.disabled = true;
+    const handler = PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email: currentUser.email,
+      amount: 300000, // ₦3,000 in kobo
+      currency: 'NGN',
+      metadata: { uid: currentUser.uid },
+      callback: (response) => {
+        // Payment succeeded on Paystack's side — but we NEVER trust that alone.
+        // Verify server-side via the Cloud Function before granting premium access.
+        verifyAndUnlock(response.reference);
+      },
+      onClose: () => {
+        payBtn.disabled = false;
+      }
+    });
+    handler.openIframe();
+  });
+
+  async function verifyAndUnlock(reference){
+    showMsg('Verifying your payment…', 'success');
+    try{
+      const verifyPayment = httpsCallable(functions, 'verifyPayment');
+      const result = await verifyPayment({ reference });
+      if(result.data && result.data.success){
+        showMsg('Payment verified! Premium unlocked for 3 months. Redirecting…', 'success');
+        setTimeout(() => location.href = 'index.html', 2000);
+      } else {
+        showMsg('Payment could not be verified. If you were charged, contact support with your reference: ' + reference, 'error');
+        payBtn.disabled = false;
+      }
+    }catch(e){
+      console.error(e);
+      showMsg('Verification failed. If you were charged, contact support with your reference: ' + reference, 'error');
+      payBtn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
