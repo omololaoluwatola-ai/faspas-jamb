@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a4fc4">
+<title>Admin — F.A.S.P.A.S</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="auth-guard.js"></script>
+<style>
+:root{
+  --bg-0:#03050d; --bg-1:#070d1e; --panel:#0f1c3a; --line:#1e3260; --line-bright:#2f4d8f;
+  --flame:#2f8fff; --flame-2:#6fc6ff; --flame-3:#bfeaff; --flame-deep:#0a4fc4;
+  --text:#eaf3ff; --muted:#7d92ba; --pass:#3ddc84; --fail:#ff5470;
+  --radius:18px; --radius-sm:12px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{ background:var(--bg-0); color:var(--text); font-family:'Exo 2',sans-serif; min-height:100vh; padding:24px 16px 60px; }
+.wrap{ max-width:420px; margin:0 auto; }
+.back-link{ display:inline-block; color:var(--flame-2); text-decoration:none; font-size:0.88rem; margin-bottom:16px; }
+.title{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:1.3rem; text-align:center; margin-bottom:4px; }
+.sub{ text-align:center; color:var(--muted); font-size:0.86rem; margin-bottom:22px; }
+.card{ background:linear-gradient(180deg, var(--panel), var(--bg-1)); border:1px solid var(--line-bright); border-radius:var(--radius); padding:20px; }
+label{ display:block; font-size:0.8rem; color:var(--muted); margin:14px 0 6px; }
+label:first-of-type{ margin-top:0; }
+input{ width:100%; padding:13px 14px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--bg-0); color:var(--text); font-family:inherit; font-size:1rem; }
+input:focus{ outline:none; border-color:var(--flame); }
+.btn{ width:100%; padding:14px; margin-top:12px; border:none; border-radius:var(--radius-sm); font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; }
+.btn.main{ background:linear-gradient(90deg, var(--flame-deep), var(--flame)); color:#03101f; }
+.btn.alt{ background:transparent; border:1px solid var(--line-bright); color:var(--flame-2); }
+.btn.danger{ background:transparent; border:1px solid var(--fail); color:var(--fail); }
+.btn:disabled{ opacity:0.5; }
+.msg{ font-size:0.86rem; margin-top:14px; padding:11px; border-radius:10px; display:none; word-break:break-word; }
+.msg.show{ display:block; }
+.msg.ok{ background:rgba(61,220,132,0.12); color:var(--pass); border:1px solid var(--pass); }
+.msg.err{ background:rgba(255,84,112,0.12); color:var(--fail); border:1px solid var(--fail); }
+.msg.info{ background:rgba(47,143,255,0.12); color:var(--flame-2); border:1px solid var(--line-bright); }
+.hint{ font-size:0.78rem; color:var(--muted); margin-top:8px; }
+#panel{ display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="index.html" class="back-link">← Back to F.A.S.P.A.S</a>
+  <div class="title">Admin</div>
+  <div class="sub">Give a student premium by email</div>
+
+  <div class="msg show info" id="gate">Checking admin access…</div>
+
+  <div class="card" id="panel">
+    <label for="email">Student email</label>
+    <input id="email" type="email" inputmode="email" autocapitalize="none" autocomplete="off" placeholder="student@gmail.com">
+
+    <label for="days">Days of premium to add</label>
+    <input id="days" type="number" inputmode="numeric" min="1" max="3650" value="90">
+    <div class="hint">90 days = 3 months. Days are added on top of any premium time they already have.</div>
+
+    <button class="btn main" id="grantBtn">Give premium</button>
+    <button class="btn alt" id="checkBtn">Check their status</button>
+    <button class="btn danger" id="revokeBtn">Remove premium</button>
+
+    <div class="msg" id="msg"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { auth } from './firebase-config.js';
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  const gate = document.getElementById('gate');
+  const panel = document.getElementById('panel');
+  const emailEl = document.getElementById('email');
+  const daysEl = document.getElementById('days');
+  const msg = document.getElementById('msg');
+  const btns = ['grantBtn','checkBtn','revokeBtn'].map(id => document.getElementById(id));
+  let currentUser = null;
+
+  function show(text, kind){ msg.textContent = text; msg.className = 'msg show ' + kind; }
+  function busy(b){ btns.forEach(x => x.disabled = b); }
+  function fmt(iso){ return new Date(iso).toDateString(); }
+
+  async function api(path, body){
+    const token = await currentUser.getIdToken(true);
+    const res = await fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(body || {})
+    });
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if(!user) return;
+    currentUser = user;
+    try{
+      const r = await api('/api/admin/check');
+      if(r.ok){ gate.style.display = 'none'; panel.style.display = 'block'; }
+      else if(r.status === 403){
+        gate.className = 'msg show err';
+        gate.textContent = 'This account is not an admin. Sign in with your Google admin account and make sure its email is verified.';
+      } else {
+        gate.className = 'msg show err';
+        gate.textContent = r.data.error || 'Could not check admin access.';
+      }
+    }catch(e){
+      gate.className = 'msg show err';
+      gate.textContent = 'Could not reach the server. Check your connection.';
+    }
+  });
+
+  function readEmail(){
+    const v = emailEl.value.trim();
+    if(!v){ show('Type the student email first.', 'err'); return null; }
+    return v;
+  }
+
+  document.getElementById('grantBtn').addEventListener('click', async () => {
+    const email = readEmail(); if(!email) return;
+    const days = Number(daysEl.value);
+    if(!Number.isInteger(days) || days < 1){ show('Enter a whole number of days (1 or more).', 'err'); return; }
+    busy(true); show('Working…', 'info');
+    try{
+      const r = await api('/api/admin/grant', { email, days });
+      if(r.ok) show(`Done. ${r.data.email} is premium until ${fmt(r.data.premiumUntil)}.`, 'ok');
+      else show(r.data.error || 'Something went wrong.', 'err');
+    }catch(e){ show('Could not reach the server.', 'err'); }
+    busy(false);
+  });
+
+  document.getElementById('checkBtn').addEventListener('click', async () => {
+    const email = readEmail(); if(!email) return;
+    busy(true); show('Checking…', 'info');
+    try{
+      const r = await api('/api/admin/lookup', { email });
+      if(!r.ok) show(r.data.error || 'Something went wrong.', 'err');
+      else if(!r.data.found) show('No account with that email has registered yet.', 'err');
+      else if(r.data.premiumActive) show(`Premium until ${fmt(r.data.premiumUntil)}.`, 'ok');
+      else show('Registered, on the free plan.', 'info');
+    }catch(e){ show('Could not reach the server.', 'err'); }
+    busy(false);
+  });
+
+  document.getElementById('revokeBtn').addEventListener('click', async () => {
+    const email = readEmail(); if(!email) return;
+    if(!confirm('Remove premium from ' + email + '?')) return;
+    busy(true); show('Working…', 'info');
+    try{
+      const r = await api('/api/admin/grant', { email, days: 0 });
+      if(r.ok) show(`Done. ${r.data.email} is back on the free plan.`, 'ok');
+      else show(r.data.error || 'Something went wrong.', 'err');
+    }catch(e){ show('Could not reach the server.', 'err'); }
+    busy(false);
+  });
+</script>
+</body>
+</html>
