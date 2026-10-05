@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a4fc4">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Go Premium — F.A.S.P.A.S</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="auth-guard.js"></script>
+<style>
+:root{
+  --bg-0:#03050d; --bg-1:#070d1e; --bg-2:#0d1730;
+  --panel:#0f1c3a; --line:#1e3260; --line-bright:#2f4d8f;
+  --flame:#2f8fff; --flame-2:#6fc6ff; --flame-3:#bfeaff; --flame-deep:#0a4fc4;
+  --text:#eaf3ff; --muted:#7d92ba; --pass:#3ddc84; --fail:#ff5470;
+  --radius:18px; --radius-sm:12px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  background:var(--bg-0); color:var(--text); font-family:'Exo 2',sans-serif;
+  min-height:100vh; padding:24px 16px 60px;
+}
+.wrap{ max-width:420px; margin:0 auto; }
+.back-link{ display:inline-block; color:var(--flame-2); text-decoration:none; font-size:0.88rem; margin-bottom:16px; }
+.hero-mark{
+  width:76px; height:76px; border-radius:20px; margin:0 auto 14px;
+  background:linear-gradient(155deg, var(--flame-deep) 0%, var(--flame) 55%, var(--flame-3) 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Orbitron',sans-serif; font-weight:900; font-size:2.2rem; color:#03101f;
+  box-shadow:0 0 40px rgba(47,143,255,0.5);
+}
+.title{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:1.4rem; text-align:center; margin-bottom:4px; }
+.sub{ text-align:center; color:var(--muted); font-size:0.86rem; margin-bottom:24px; }
+
+.status-card{
+  background:linear-gradient(180deg, var(--panel), var(--bg-1));
+  border:1px solid var(--line); border-radius:var(--radius); padding:20px; margin-bottom:16px;
+  text-align:center;
+}
+.status-badge{
+  display:inline-block; padding:6px 16px; border-radius:20px; font-family:'Orbitron',sans-serif;
+  font-weight:700; font-size:0.78rem; margin-bottom:8px;
+}
+.status-badge.free{ background:rgba(255,184,77,0.15); color:#ffb84d; border:1px solid #ffb84d; }
+.status-badge.premium{ background:rgba(61,220,132,0.15); color:var(--pass); border:1px solid var(--pass); }
+.status-detail{ color:var(--muted); font-size:0.84rem; }
+
+.plan-card{
+  background:linear-gradient(180deg, var(--panel), var(--bg-1));
+  border:1px solid var(--line-bright); border-radius:var(--radius); padding:24px 20px;
+  text-align:center; box-shadow:0 0 30px rgba(47,143,255,0.1);
+}
+.price{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:2.2rem; color:var(--flame-3); }
+.price span{ font-size:1rem; color:var(--muted); font-weight:400; }
+.perks{ text-align:left; margin:20px 0; }
+.perk{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; font-size:0.9rem; }
+.perk .check{ color:var(--pass); flex-shrink:0; }
+
+.pay-btn{
+  width:100%; padding:16px; margin-top:4px;
+  background:linear-gradient(90deg, var(--flame-deep), var(--flame));
+  border:none; border-radius:var(--radius-sm); color:#03101f;
+  font-family:'Orbitron',sans-serif; font-weight:700; font-size:1rem; cursor:pointer;
+  transition:transform .12s ease;
+}
+.pay-btn:active{ transform:scale(0.97); }
+.pay-btn:disabled{ opacity:0.5; }
+
+.cmp{ width:100%; border-collapse:collapse; margin:18px 0 6px; font-size:0.8rem; }
+.cmp th{ font-family:'Orbitron',sans-serif; font-size:0.7rem; color:var(--muted); font-weight:700; padding:8px 6px; text-align:center; }
+.cmp th:first-child{ text-align:left; }
+.cmp th.prem{ color:var(--flame-2); }
+.cmp td{ padding:10px 6px; border-top:1px solid var(--line); text-align:center; color:var(--muted); vertical-align:middle; }
+.cmp td:first-child{ text-align:left; color:var(--text); }
+.cmp td.prem{ color:var(--pass); font-weight:700; }
+.cmp td.no{ color:#56668a; }
+.cmp td.prem.soon{ color:#ffb84d; font-size:0.74rem; }
+.soon-tag{ display:inline-block; margin-left:6px; padding:2px 8px; border-radius:20px; border:1px solid #ffb84d; color:#ffb84d; font-family:'Orbitron',sans-serif; font-size:0.6rem; font-weight:700; vertical-align:middle; }
+.sec-title{ font-family:'Orbitron',sans-serif; font-size:0.78rem; color:var(--flame-2); text-align:left; margin:22px 0 10px; letter-spacing:0.04em; }
+.perk .where{ display:block; color:var(--muted); font-size:0.78rem; margin-top:2px; }
+.fine{ color:var(--muted); font-size:0.76rem; line-height:1.6; text-align:left; margin-top:16px; }
+.msg{ text-align:center; font-size:0.84rem; margin-top:14px; padding:10px; border-radius:10px; display:none; }
+.msg.show{ display:block; }
+.msg.success{ background:rgba(61,220,132,0.12); color:var(--pass); border:1px solid var(--pass); }
+.msg.error{ background:rgba(255,84,112,0.12); color:var(--fail); border:1px solid var(--fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="index.html" class="back-link">← Back to F.A.S.P.A.S</a>
+
+  <div class="hero-mark">F</div>
+  <div class="title">Go Premium</div>
+  <div class="sub">Everything you need to be exam-ready for JAMB</div>
+
+  <div class="status-card" id="statusCard" style="display:none">
+    <div class="status-badge free" id="statusBadge">Loading…</div>
+    <div class="status-detail" id="statusDetail"></div>
+  </div>
+
+  <div class="plan-card" id="planCard">
+    <div class="price">₦3,000 <span>/ 3 months</span></div>
+
+    <div class="sec-title">WHAT'S INSIDE PREMIUM</div>
+    <div class="perks">
+      <div class="perk"><span class="check">✔</span><span><b><span id="qCountLabel">5,000+</span> real JAMB past questions</b>
+        <span class="where">Physics, Chemistry, Biology, English and Mathematics. Open any subject, then choose Topics or Years.</span></span></div>
+      <div class="perk"><span class="check">✔</span><span><b>Full CBT Mode</b> <span class="soon-tag" id="cbtSoon" style="display:none">COMING SOON</span>
+        <span class="where">On the home page, tap Full CBT Mode: 180 questions in 2 hours, English plus the 3 electives you choose, with a question navigator and a full review of your answers at the end.</span></span></div>
+      <div class="perk"><span class="check">✔</span><span><b>Time-tracked practice mode</b>
+        <span class="where">A 40-second-per-question timer, the same pace as the real JAMB. In any subject, choose Topics (timer optional) or Years (always timed).</span></span></div>
+      <div class="perk"><span class="check">✔</span><span><b>Full explanation and a time-saving hack with every question</b>
+        <span class="where">After you answer, you see why the correct answer is right, step by step, plus the ⚡ HACK: the fastest way to get that question right in the real exam.</span></span></div>
+      <div class="perk"><span class="check">✔</span><span><b>Strongest and weakest points tracker</b>
+        <span class="where">On the home page, open My Score History to see your strong areas and weak areas by topic, so you know exactly what to fix.</span></span></div>
+    </div>
+
+    <button class="pay-btn" id="payBtn">Subscribe Now — ₦3,000</button>
+    <div class="msg" id="msgBox"></div>
+    <div class="fine">Pay securely with Paystack: card, bank transfer or USSD. You will be taken to Paystack's own payment page and brought back here automatically. Paying by transfer? Keep the page open until it confirms. If copying the account number fails, press and hold the number to copy it. Premium starts as soon as your payment is confirmed and lasts 3 months. If you renew early, the new 3 months are added on top of the time you have left.</div>
+  </div>
+</div>
+
+<script type="module">
+  import { auth } from './firebase-config.js';
+  import {
+    getFirestore, doc, getDoc
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  const db = getFirestore();
+  // ---- Things you may want to edit later (one line each) ----
+  const QUESTION_COUNT_LABEL = '5,000+';   // shown as "<this> real JAMB past questions"
+  const FULL_CBT_LIVE = true;              // set to false to show a COMING SOON tag on Full CBT Mode
+  document.getElementById('qCountLabel').textContent = QUESTION_COUNT_LABEL;
+  if(!FULL_CBT_LIVE) document.getElementById('cbtSoon').style.display = 'inline-block';
+
+  const statusCard = document.getElementById('statusCard');
+  const statusBadge = document.getElementById('statusBadge');
+  const statusDetail = document.getElementById('statusDetail');
+  const payBtn = document.getElementById('payBtn');
+  const msgBox = document.getElementById('msgBox');
+
+  function showMsg(text, type){
+    msgBox.textContent = text;
+    msgBox.className = `msg show ${type}`;
+  }
+
+  function isPremiumActive(userData){
+    if(!userData || userData.plan !== 'premium' || !userData.premiumUntil) return false;
+    const until = userData.premiumUntil.toMillis ? userData.premiumUntil.toMillis() : new Date(userData.premiumUntil).getTime();
+    return until > Date.now();
+  }
+
+  let currentUser = null;
+
+  onAuthStateChanged(auth, async (user) => {
+    if(!user) return; // auth-guard.js already redirects to login before this fires
+    currentUser = user;
+    try{
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      const data = snap.exists() ? snap.data() : { plan: 'free', premiumUntil: null };
+      if(isPremiumActive(data)){
+        statusBadge.textContent = 'PREMIUM';
+        statusBadge.className = 'status-badge premium';
+        const until = data.premiumUntil.toMillis ? new Date(data.premiumUntil.toMillis()) : new Date(data.premiumUntil);
+        statusDetail.textContent = `Active until ${until.toDateString()}`;
+        statusCard.style.display = 'block';
+        payBtn.textContent = 'Renew for another 3 months — ₦3,000';
+      }
+    }catch(e){
+      statusCard.style.display = 'block';
+      statusBadge.textContent = 'STATUS';
+      statusDetail.textContent = 'Could not load your current plan status.';
+      console.warn(e);
+    }
+  });
+
+  const PENDING_KEY = 'faspas_pending_payment';
+  const PENDING_MAX_AGE = 2 * 86400000; // keep checking a started payment for 2 days
+
+  function savePending(ref){ try{ localStorage.setItem(PENDING_KEY, JSON.stringify({ ref, at: Date.now() })); }catch(e){} }
+  function clearPending(){ try{ localStorage.removeItem(PENDING_KEY); }catch(e){} }
+  function readPending(){
+    try{
+      const v = JSON.parse(localStorage.getItem(PENDING_KEY) || 'null');
+      if(v && v.ref && Date.now() - v.at < PENDING_MAX_AGE) return v.ref;
+      if(v) clearPending();
+    }catch(e){}
+    return null;
+  }
+
+  payBtn.addEventListener('click', async () => {
+    if(!currentUser){ showMsg('Please wait for sign-in to finish loading.', 'error'); return; }
+    payBtn.disabled = true;
+    showMsg('Opening Paystack…', 'success');
+    try{
+      const idToken = await currentUser.getIdToken(true);
+      const res = await fetch('/api/start-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        body: '{}'
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok || !data.authorization_url){
+        showMsg(data.error || 'Could not start the payment. Check your connection and try again.', 'error');
+        payBtn.disabled = false;
+        return;
+      }
+      savePending(data.reference);      // so we can still confirm it if the student returns late
+      location.href = data.authorization_url;
+    }catch(e){
+      console.error(e);
+      showMsg('Could not start the payment. Check your connection and try again.', 'error');
+      payBtn.disabled = false;
+    }
+  });
+
+  // Asks the server to confirm a payment. Returns 'ok', 'pending' (Paystack has not
+  // confirmed it yet, e.g. a bank transfer still on its way), 'rejected' or 'error'.
+  async function verifyOnce(reference){
+    try{
+      const idToken = await currentUser.getIdToken(true);
+      const res = await fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+        body: JSON.stringify({ reference })
+      });
+      const data = await res.json().catch(() => ({}));
+      if(res.ok && data.success) return { state: 'ok' };
+      if(res.status === 409 || res.status === 403) return { state: 'rejected', error: data.error };
+      if(res.status === 400) return { state: 'pending', error: data.error };
+      return { state: 'error', error: data.error };
+    }catch(e){
+      console.error(e);
+      return { state: 'error' };
+    }
+  }
+
+  function paymentDone(){
+    clearPending();
+    payBtn.disabled = true;
+    showMsg('Payment confirmed! Premium unlocked for 3 months. Taking you to the home page…', 'success');
+    setTimeout(() => location.href = 'index.html', 2000);
+  }
+
+  // Keeps asking for up to ~70 seconds, because transfers can take a moment to arrive.
+  async function confirmPayment(reference, attempts){
+    showMsg('Confirming your payment with Paystack…', 'success');
+    let last = null;
+    for(let i = 0; i < attempts; i++){
+      last = await verifyOnce(reference);
+      if(last.state === 'ok'){ paymentDone(); return true; }
+      if(last.state === 'rejected' || last.state === 'error') break;
+      showMsg('Waiting for Paystack to confirm your payment. Keep this page open…', 'success');
+      await new Promise(r => setTimeout(r, 10000));
+    }
+    if(last && last.state === 'rejected') clearPending();
+    if(last && last.state === 'pending'){
+      showMsg('Paystack has not confirmed this payment yet. If you paid, it can take a few minutes. Come back to this page and it will confirm by itself. Your reference: ' + reference, 'error');
+    }else{
+      showMsg(((last && last.error) || 'Could not confirm right now.') + ' If you were charged, contact support with your reference: ' + reference, 'error');
+    }
+    payBtn.disabled = false;
+    return false;
+  }
+
+  // When Paystack sends the student back here it adds ?reference=... to the address.
+  // Also re-check a payment that was started earlier but never confirmed.
+  async function checkReturn(){
+    const q = new URLSearchParams(location.search);
+    const ref = q.get('reference') || q.get('trxref');
+    if(ref){
+      history.replaceState(null, '', location.pathname);
+      await confirmPayment(ref, 7);
+      return;
+    }
+    const pending = readPending();
+    if(!pending) return;
+    const r = await verifyOnce(pending);
+    if(r.state === 'ok') paymentDone();
+    else if(r.state === 'rejected') clearPending();
+    else if(r.state === 'pending') showMsg('We are still waiting for Paystack to confirm your last payment. If you already paid, come back in a few minutes.', 'success');
+  }
+
+  let returnChecked = false;
+  onAuthStateChanged(auth, (user) => {
+    if(!user || returnChecked) return;
+    returnChecked = true;
+    currentUser = user;
+    checkReturn();
+  });
+</script>
+</body>
+</html>
