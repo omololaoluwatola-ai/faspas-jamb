@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="module" src="auth-guard.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a4fc4">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>F.A.S.P.A.S — Full CBT Mode</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8MQXCOH4G8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8MQXCOH4G8');
+</script>
+<!-- GoatCounter -->
+<script data-goatcounter="https://faspas-jamb.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   F.A.S.P.A.S — BLUE FLAME THEME (v2)
+   Shared stylesheet for all pages.
+   ============================================================ */
+
+:root{
+  --bg-0:#03050d;
+  --bg-1:#070d1e;
+  --bg-2:#0d1730;
+  --panel:#0f1c3a;
+  --line:#1e3260;
+  --line-bright:#2f4d8f;
+  --flame:#2f8fff;
+  --flame-2:#6fc6ff;
+  --flame-3:#bfeaff;
+  --flame-deep:#0a4fc4;
+  --ice:#8fd9ff;
+  --text:#eaf3ff;
+  --muted:#7d92ba;
+  --pass:#3ddc84;
+  --fail:#ff5470;
+  --warn:#ffb84d;
+  --radius:18px;
+  --radius-sm:12px;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+::selection{ background:var(--flame); color:#04101f; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  background:var(--bg-0);
+  color:var(--text);
+  font-family:'Exo 2', sans-serif;
+  min-height:100vh;
+  padding:22px 16px 70px;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* ---------- Ambient animated background: slow aurora wash ---------- */
+body::before{
+  content:"";
+  position:fixed; inset:-10%;
+  background:
+    radial-gradient(circle at 20% -10%, rgba(47,143,255,0.20), transparent 45%),
+    radial-gradient(circle at 90% 10%, rgba(111,198,255,0.12), transparent 40%),
+    radial-gradient(circle at 30% 110%, rgba(10,79,196,0.18), transparent 45%);
+  animation:aurora-drift 18s ease-in-out infinite alternate;
+  z-index:-2; pointer-events:none;
+}
+@keyframes aurora-drift{
+  0%{ transform:translate(0,0) scale(1); }
+  100%{ transform:translate(-2%,2%) scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  body::before, .brand-mark, .fullcbt-cta, .pulse-ring, .hero-title{ animation:none !important; }
+}
+
+.wrap{max-width:680px; margin:0 auto; position:relative; z-index:1;}
+
+/* ---------- Hero (home only) ---------- */
+.hero{ text-align:center; padding:18px 0 8px; position:relative; }
+.hero-mark-wrap{
+  position:relative; width:112px; height:112px; margin:0 auto 18px;
+  display:flex; align-items:center; justify-content:center;
+}
+.pulse-ring{
+  position:absolute; inset:0; border-radius:50%;
+  border:2px solid var(--flame);
+  animation:pulse-ring 2.6s ease-out infinite;
+}
+.pulse-ring.delay{ animation-delay:1.3s; }
+@keyframes pulse-ring{
+  0%{ transform:scale(0.7); opacity:0.9; }
+  100%{ transform:scale(1.6); opacity:0; }
+}
+.hero-mark{
+  width:88px; height:88px; border-radius:24px;
+  background:linear-gradient(155deg, var(--flame-deep) 0%, var(--flame) 55%, var(--flame-3) 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Orbitron', sans-serif; font-weight:900; font-size:2.6rem;
+  color:#03101f;
+  box-shadow:0 0 50px rgba(47,143,255,0.65), 0 0 100px rgba(47,143,255,0.25), inset 0 2px 0 rgba(255,255,255,0.4);
+  position:relative; z-index:2;
+}
+.hero-title{
+  font-family:'Orbitron', sans-serif; font-weight:900; font-size:2.1rem;
+  letter-spacing:2px; margin-top:2px;
+  background:linear-gradient(90deg, var(--flame-2), var(--flame-3), var(--ice));
+  background-size:200% auto;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:shine 6s linear infinite;
+}
+@keyframes shine{
+  0%{ background-position:0% center; }
+  100%{ background-position:200% center; }
+}
+.hero-sub{ color:var(--muted); font-size:0.92rem; margin-top:8px; line-height:1.6; max-width:420px; margin-left:auto; margin-right:auto; }
+
+/* ---------- Countdown ---------- */
+.countdown{ display:flex; justify-content:center; gap:10px; margin:22px 0 4px; }
+.cd-unit{
+  background:linear-gradient(180deg, var(--panel), var(--bg-1));
+  border:1px solid var(--line-bright);
+  border-radius:var(--radius-sm);
+  padding:12px 8px; min-width:64px; text-align:center;
+  box-shadow:0 0 20px rgba(47,143,255,0.12), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.cd-num{
+  font-family:'Orbitron',sans-serif; font-weight:700; font-size:1.4rem; color:var(--flame-3);
+  text-shadow:0 0 16px rgba(111,198,255,0.6);
+}
+.cd-label{ font-size:0.66rem; color:var(--muted); letter-spacing:0.5px; margin-top:2px; text-transform:uppercase; }
+.cd-note{ text-align:center; color:var(--muted); font-size:0.72rem; margin-top:8px; }
+
+/* ---------- Brand row (subject/inner pages) ---------- */
+.brand-row{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+.brand-mark{
+  width:48px; height:48px; border-radius:14px; flex-shrink:0;
+  background:linear-gradient(155deg, var(--flame-deep), var(--flame) 60%, var(--flame-3));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Orbitron', sans-serif; font-weight:900; font-size:22px; color:#03101f;
+  box-shadow:0 0 28px rgba(47,143,255,0.55), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.brand-name{
+  font-family:'Orbitron', sans-serif; font-weight:700; font-size:1.5rem; letter-spacing:1.2px;
+  background:linear-gradient(90deg, var(--flame-2), var(--ice));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.brand-sub{ color:var(--muted); font-size:0.86rem; margin-top:2px; }
+
+/* ---------- Cards ---------- */
+.card{
+  background:linear-gradient(180deg, var(--panel), var(--bg-1));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px 18px;
+  margin-bottom:16px;
+  box-shadow:0 0 30px rgba(47,143,255,0.06), inset 0 1px 0 rgba(255,255,255,0.02);
+}
+.card h2{
+  font-family:'Orbitron', sans-serif; font-size:1.05rem; color:var(--flame-2);
+  margin-bottom:14px; letter-spacing:0.5px;
+}
+
+/* ---------- Subject grid ---------- */
+.subject-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.subject-tile{
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:18px 14px; text-decoration:none; color:var(--text); display:block;
+  position:relative; overflow:hidden;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.subject-tile::after{
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  background:radial-gradient(circle at 30% 20%, rgba(47,143,255,0.25), transparent 60%);
+  opacity:0; transition:opacity .25s ease;
+}
+.subject-tile:active{ transform:scale(0.96); }
+.subject-tile:hover{ border-color:var(--flame); box-shadow:0 8px 26px rgba(47,143,255,0.22); }
+.subject-tile:hover::after{ opacity:1; }
+.subject-tile .s-icon{ font-size:1.7rem; margin-bottom:8px; display:block; position:relative; z-index:1; }
+.subject-tile .s-name{ font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.96rem; position:relative; z-index:1; }
+.subject-tile .s-count{ color:var(--muted); font-size:0.78rem; margin-top:4px; position:relative; z-index:1; }
+
+.fullcbt-cta{
+  display:block; text-decoration:none; position:relative; overflow:hidden;
+  background:linear-gradient(120deg, var(--flame-deep), var(--flame) 45%, var(--flame-deep));
+  background-size:220% 220%;
+  animation:gradient-flow 6s ease infinite;
+  border-radius:var(--radius); padding:22px; text-align:center; color:#03101f;
+  box-shadow:0 10px 36px rgba(47,143,255,0.4);
+  margin-bottom:16px;
+  transition:transform .15s ease;
+}
+.fullcbt-cta:active{ transform:scale(0.98); }
+@keyframes gradient-flow{
+  0%{ background-position:0% 50%; }
+  50%{ background-position:100% 50%; }
+  100%{ background-position:0% 50%; }
+}
+.fullcbt-cta .fc-title{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:1.2rem; letter-spacing:1px; }
+.fullcbt-cta .fc-sub{ font-size:0.83rem; opacity:0.85; margin-top:5px; font-weight:600; }
+
+.history-link{
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:15px 16px; text-decoration:none; color:var(--text); margin-bottom:16px;
+  transition:border-color .15s ease, transform .1s ease;
+}
+.history-link:hover{ border-color:var(--flame); }
+.history-link:active{ transform:scale(0.98); }
+.history-link .h-label{ font-weight:600; font-size:0.95rem; }
+.history-link .h-arrow{ color:var(--flame-2); transition:transform .15s ease; display:inline-block; }
+.history-link:hover .h-arrow{ transform:translateX(4px); }
+
+/* ---------- Mode picker ---------- */
+.mode-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+.elective-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px; }
+.elective-tile.locked{ opacity:0.4; pointer-events:none; }
+.mode-tile{
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:16px 10px; text-align:center; cursor:pointer;
+  transition:all .15s ease;
+}
+.mode-tile:active{ transform:scale(0.96); }
+.mode-tile.selected{
+  background:linear-gradient(180deg, var(--flame), var(--flame-deep));
+  border-color:var(--flame); box-shadow:0 0 24px rgba(47,143,255,0.45);
+}
+.mode-tile .m-title{ font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.92rem; }
+.mode-tile .m-desc{ font-size:0.76rem; color:var(--muted); margin-top:4px; }
+.mode-tile.selected .m-desc{ color:rgba(3,16,31,0.75); }
+.mode-tile.selected .m-title{ color:#03101f; }
+
+.select-field{
+  width:100%; padding:14px; margin-bottom:14px;
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+  color:var(--text); font-family:'Exo 2',sans-serif; font-size:0.94rem;
+  transition:border-color .15s ease;
+}
+.select-field:focus{ outline:none; border-color:var(--flame); box-shadow:0 0 0 3px rgba(47,143,255,0.2); }
+
+.toggle-row{
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:13px 14px; margin-bottom:14px;
+}
+.toggle-row .t-label{ font-size:0.88rem; }
+.toggle-row .t-note{ font-size:0.74rem; color:var(--muted); margin-top:2px; }
+.switch{ position:relative; width:46px; height:26px; flex-shrink:0; margin-left:12px; }
+.switch input{ opacity:0; width:0; height:0; }
+.slider{ position:absolute; cursor:pointer; inset:0; background:var(--line); border-radius:20px; transition:.2s; }
+.slider::before{ content:""; position:absolute; height:20px; width:20px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.2s; }
+.switch input:checked + .slider{ background:var(--flame); box-shadow:0 0 12px rgba(47,143,255,0.6); }
+.switch input:checked + .slider::before{ transform:translateX(20px); }
+
+.start-btn{
+  width:100%; padding:16px; position:relative;
+  background:linear-gradient(90deg, var(--flame-deep), var(--flame));
+  border:none; border-radius:var(--radius-sm);
+  color:#03101f; font-family:'Orbitron',sans-serif; font-weight:700; font-size:1.02rem; letter-spacing:0.5px;
+  cursor:pointer; box-shadow:0 6px 22px rgba(47,143,255,0.35);
+  transition:transform .12s ease, box-shadow .15s ease;
+}
+.start-btn:active{ transform:scale(0.97); box-shadow:0 3px 12px rgba(47,143,255,0.3); }
+.start-btn:disabled{ opacity:0.45; box-shadow:none; }
+.start-btn.ghost{ background:transparent; border:1px solid var(--flame); color:var(--flame-2); box-shadow:none; }
+.start-btn.ghost:active{ background:rgba(47,143,255,0.1); }
+
+/* ---------- Exam screen ---------- */
+.exam-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:0.82rem; color:var(--muted); }
+.timer-badge{
+  font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.9rem;
+  padding:6px 12px; border-radius:20px; background:var(--bg-2); border:1px solid var(--line);
+  color:var(--flame-2); transition:all .3s ease;
+}
+.timer-badge.low{ color:var(--warn); border-color:var(--warn); }
+.timer-badge.critical{ color:var(--fail); border-color:var(--fail); animation:pulse 0.9s infinite; }
+@keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.45;} }
+
+.progress-bar{ height:6px; background:var(--bg-2); border-radius:4px; overflow:hidden; margin-bottom:16px; }
+.progress-fill{ height:100%; background:linear-gradient(90deg,var(--flame),var(--flame-3)); width:0%; transition:width .3s ease; box-shadow:0 0 10px rgba(111,198,255,0.6); }
+
+.q-tag{ display:inline-block; background:var(--bg-2); border:1px solid var(--line); color:var(--flame-2); font-size:0.7rem; padding:4px 10px; border-radius:20px; margin-bottom:10px; }
+.q-text{ font-size:1.02rem; font-weight:600; line-height:1.5; margin-bottom:16px; }
+
+.opt{
+  display:block; width:100%; text-align:left;
+  background:var(--bg-2); border:1px solid var(--line); border-radius:12px;
+  padding:14px; margin-bottom:10px; color:var(--text); font-family:'Exo 2',sans-serif;
+  font-size:0.94rem; cursor:pointer; transition:border-color .15s ease, transform .08s ease, background .15s ease;
+}
+.opt:not(.disabled):hover{ border-color:var(--flame-2); background:#101f42; }
+.opt:not(.disabled):active{ transform:scale(0.985); }
+.opt .opt-letter{ color:var(--flame-2); font-weight:700; margin-right:8px; }
+.opt.correct{ background:linear-gradient(90deg,#0f3d24,#12522f); border-color:var(--pass); }
+.opt.wrong{ background:linear-gradient(90deg,#3d0f1a,#521221); border-color:var(--fail); }
+.opt.disabled{ pointer-events:none; opacity:0.9; }
+
+.feedback{ display:none; margin-top:4px; padding:14px; border-radius:12px; background:var(--bg-2); border:1px solid var(--line); font-size:0.87rem; line-height:1.55; }
+.feedback.show{ display:block; animation:fade-in .2s ease; }
+@keyframes fade-in{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+.feedback .fb-label{ font-family:'Orbitron',sans-serif; font-size:0.78rem; letter-spacing:1px; margin-bottom:6px; }
+.feedback.correct-fb .fb-label{ color:var(--pass); }
+.feedback.wrong-fb .fb-label{ color:var(--fail); }
+
+.nav-row{ display:flex; gap:10px; margin-top:14px; }
+.nav-row .start-btn{ flex:1; }
+
+/* ---------- Question navigator ---------- */
+.qnav-toggle{
+  position:fixed; right:16px; bottom:16px; z-index:50;
+  width:56px; height:56px; border-radius:50%;
+  background:linear-gradient(155deg, var(--flame), var(--flame-deep));
+  color:#03101f; border:none; box-shadow:0 6px 24px rgba(47,143,255,0.55);
+  font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.72rem;
+  transition:transform .15s ease;
+}
+.qnav-toggle:active{ transform:scale(0.9); }
+.qnav-panel{ position:fixed; inset:0; background:rgba(3,5,13,0.95); z-index:60; display:none; padding:20px 16px; overflow-y:auto; }
+.qnav-panel.show{ display:block; animation:fade-in .15s ease; }
+.qnav-panel h3{ font-family:'Orbitron',sans-serif; color:var(--flame-2); margin-bottom:14px; }
+.qnav-grid{ display:grid; grid-template-columns:repeat(8, 1fr); gap:6px; margin-bottom:16px; }
+.qnav-cell{
+  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  background:var(--bg-2); border:1px solid var(--line); border-radius:6px;
+  font-size:0.72rem; color:var(--muted); cursor:pointer; transition:transform .1s ease;
+}
+.qnav-cell:active{ transform:scale(0.85); }
+.qnav-cell.unanswered{ background:rgba(255,84,112,0.18); border-color:var(--fail); color:var(--fail); }
+.qnav-cell.answered{ background:rgba(61,220,132,0.18); border-color:var(--pass); color:var(--pass); }
+.qnav-cell.flagged{ background:rgba(255,184,77,0.15); border-color:var(--warn); color:var(--warn); }
+.qnav-cell.current{ background:#1f6fe0 !important; border-color:#7ec0ff !important; color:#fff !important; box-shadow:0 0 0 2px #7ec0ff; }
+.qnav-legend{ display:flex; gap:14px; font-size:0.75rem; color:var(--muted); margin-bottom:14px; flex-wrap:wrap; }
+.qnav-legend span{ display:flex; align-items:center; gap:5px; }
+.qnav-legend .dot{ width:10px; height:10px; border-radius:3px; display:inline-block; }
+.subject-block-label{ font-family:'Orbitron',sans-serif; font-size:0.75rem; color:var(--muted); margin:14px 0 6px; }
+
+/* ---------- Review screen ---------- */
+.review-item{ background:var(--bg-2); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:10px; }
+.review-item .r-q{ font-size:0.9rem; font-weight:600; margin-bottom:8px; }
+.review-item .r-your{ font-size:0.84rem; margin-bottom:4px; }
+.review-item .r-your.wrong{ color:var(--fail); }
+.review-item .r-your.right{ color:var(--pass); }
+.review-item .r-correct{ font-size:0.84rem; color:var(--pass); margin-bottom:8px; }
+.review-item .r-exp{ font-size:0.82rem; color:var(--muted); line-height:1.5; }
+
+/* ---------- Results ---------- */
+.score-circle{
+  width:154px; height:154px; border-radius:50%;
+  border:7px solid var(--flame);
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  margin:6px auto 20px; box-shadow:0 0 46px rgba(47,143,255,0.4), inset 0 0 20px rgba(47,143,255,0.15);
+  animation:score-pop .4s ease;
+}
+@keyframes score-pop{ from{ transform:scale(0.7); opacity:0; } to{ transform:scale(1); opacity:1; } }
+.score-num{ font-family:'Orbitron',sans-serif; font-size:2rem; font-weight:900; color:var(--flame-3); text-shadow:0 0 20px rgba(111,198,255,0.5); }
+.score-label{ font-size:0.72rem; color:var(--muted); }
+.subject-breakdown{ margin-top:6px; }
+.sb-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:0.88rem; }
+.sb-row:last-child{ border-bottom:none; }
+
+/* ---------- History ---------- */
+.hist-row{ background:var(--bg-2); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:10px; transition:border-color .15s ease; }
+.hist-row:hover{ border-color:var(--line-bright); }
+.hist-row .hr-top{ display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px; }
+.hist-row .hr-mode{ font-weight:700; color:var(--flame-2); }
+.hist-row .hr-date{ color:var(--muted); font-size:0.76rem; }
+.hist-row .hr-score{ font-family:'Orbitron',sans-serif; font-weight:700; font-size:1.1rem; }
+.weak-tag{ display:inline-block; background:rgba(255,84,112,0.12); border:1px solid var(--fail); color:var(--fail); font-size:0.74rem; padding:3px 10px; border-radius:20px; margin:3px 4px 0 0; }
+.strong-tag{ display:inline-block; background:rgba(61,220,132,0.12); border:1px solid var(--pass); color:var(--pass); font-size:0.74rem; padding:3px 10px; border-radius:20px; margin:3px 4px 0 0; }
+.empty-note{ color:var(--muted); font-size:0.9rem; text-align:center; padding:20px 0; }
+
+.back-link{ display:inline-block; color:var(--flame-2); text-decoration:none; font-size:0.88rem; margin-bottom:14px; transition:transform .12s ease; }
+.back-link:active{ transform:translateX(-3px); }
+
+.footer-note{ text-align:center; color:var(--muted); font-size:0.76rem; margin-top:18px; line-height:1.5; }
+
+.hidden{ display:none !important; }
+
+/* Accessible focus visibility across interactive elements */
+button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible{
+  outline:2px solid var(--flame-2); outline-offset:2px;
+}
+
+
+/* ---------- Install app bar (PWA) ---------- */
+.install-bar{
+  position:fixed; left:12px; right:12px; bottom:12px; z-index:90;
+  display:none; align-items:center; justify-content:space-between; gap:12px;
+  background:linear-gradient(90deg, var(--flame-deep), var(--flame));
+  border-radius:16px; padding:12px 14px;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom));
+  box-shadow:0 8px 28px rgba(47,143,255,0.45);
+  animation:install-slide-up .3s ease;
+}
+@keyframes install-slide-up{ from{ transform:translateY(20px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
+.install-bar.show{ display:flex; }
+.install-bar .ib-icon{
+  width:34px; height:34px; border-radius:9px; background:#03101f; color:var(--flame-3);
+  display:flex; align-items:center; justify-content:center; font-family:'Orbitron',sans-serif;
+  font-weight:900; font-size:1rem; flex-shrink:0;
+}
+.install-bar .ib-text{ flex:1; min-width:0; }
+.install-bar .ib-title{ color:#03101f; font-weight:700; font-size:0.86rem; font-family:'Exo 2',sans-serif; }
+.install-bar .ib-sub{ color:rgba(3,16,31,0.72); font-size:0.72rem; margin-top:1px; }
+.install-bar button.ib-btn{
+  background:#03101f; color:var(--flame-3); border:none; border-radius:10px;
+  padding:10px 16px; font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.78rem;
+  cursor:pointer; white-space:nowrap; flex-shrink:0; transition:transform .12s ease;
+}
+.install-bar button.ib-btn:active{ transform:scale(0.93); }
+/* question-map button */
+.qnav-toggle{ bottom:18px !important; }
+
+.opt.sel{ background:linear-gradient(90deg,#0d2a5c,#123b7d); border-color:var(--flame-2); }
+.start-btn.danger{ background:linear-gradient(90deg,#ff5470,#c8384f); color:#fff; }
+.start-btn.flag-on{ background:rgba(255,184,77,0.18); border-color:var(--warn); color:var(--warn); }
+.start-btn:disabled{ opacity:.4; }
+.subj-tabs{ display:flex; gap:6px; overflow-x:hidden; margin-bottom:12px; padding-bottom:4px; }
+.stab{ flex:1 1 0; min-width:0; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:8px 2px !important;  background:var(--bg-2); border:1px solid var(--line); color:var(--muted); padding:8px 12px; border-radius:10px; font-family:'Exo 2',sans-serif; font-weight:700; font-size:.74rem; cursor:pointer; }
+.stab.active{ background:var(--flame-deep); border-color:var(--flame-2); color:#fff; }
+.q-passage{ background:var(--bg-2); border-left:3px solid var(--flame); border-radius:8px; padding:12px; margin-bottom:12px; font-size:.88rem; line-height:1.65; white-space:pre-wrap; color:#cfe0ff; max-height:260px; overflow-y:auto; }
+.q-img{ margin-bottom:14px; text-align:center; }
+.q-img img{ max-width:100%; height:auto; background:#fff; border-radius:8px; pointer-events:none; }
+.resume-box{ border:1px solid var(--flame); background:var(--bg-2); border-radius:14px; padding:14px; margin-bottom:16px; }
+.rb-title{ font-family:'Orbitron',sans-serif; font-weight:700; color:var(--flame-2); font-size:.95rem; }
+.rb-sub{ color:var(--muted); font-size:.84rem; margin:6px 0 12px; }
+.rb-btns{ display:flex; gap:10px; } .rb-btns .start-btn{ flex:1; margin-top:0; }
+.warn-banner{ position:fixed; top:16px; left:16px; right:16px; z-index:70; background:var(--warn); color:#1a1200; padding:12px 16px; border-radius:12px; font-weight:700; text-align:center; }
+.modal{ position:fixed; inset:0; z-index:90; background:rgba(3,5,13,.85); display:flex; align-items:center; justify-content:center; padding:20px; }
+.modal-box{ background:var(--panel); border:1px solid var(--line-bright); border-radius:16px; padding:20px; max-width:380px; width:100%; }
+.modal-title{ font-family:'Orbitron',sans-serif; font-weight:700; margin-bottom:10px; color:var(--flame-3); }
+.modal-text{ color:var(--text); font-size:.9rem; line-height:1.55; margin-bottom:16px; }
+.rev-tabs{ display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; margin-bottom:12px; }
+.rtab{ background:var(--bg-2); border:1px solid var(--line); color:var(--muted); padding:7px 11px; border-radius:10px; font-size:.78rem; font-weight:700; white-space:nowrap; cursor:pointer; }
+.rtab.active{ background:var(--flame-deep); color:#fff; border-color:var(--flame-2); }
+.r-head{ display:flex; justify-content:space-between; gap:8px; font-size:.74rem; color:var(--muted); margin-bottom:8px; }
+.r-badge.right{ color:var(--pass); } .r-badge.wrong{ color:var(--fail); } .r-badge.blank{ color:var(--warn); }
+.save-btn{ margin-top:10px; background:transparent; border:1px solid var(--line-bright); color:var(--flame-2); border-radius:8px; padding:7px 12px; font-size:.8rem; cursor:pointer; }
+.save-btn.on{ background:rgba(255,184,77,.15); border-color:var(--warn); color:var(--warn); }
+.qnav-panel{ overflow-y:auto; background:#03050d !important; }
+.qnav-cell{ cursor:pointer; }
+body{ -webkit-user-select:none; user-select:none; }
+.wrap{ padding-bottom:90px; }
+.nav-row .start-btn{ padding-left:6px; padding-right:6px; font-size:.78rem; white-space:nowrap; }
+.map-inline{ background:var(--flame-deep); border:1px solid var(--flame-2); color:#fff; border-radius:10px; padding:8px 14px; font-family:'Orbitron',sans-serif; font-weight:700; font-size:.78rem; cursor:pointer; }
+.exam-top{ gap:8px; }
+.rgrid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0 4px; }
+.rbtn{ background:var(--bg-2); border:1px solid var(--line-bright); border-radius:16px; padding:18px 8px; text-align:center; color:var(--text); cursor:pointer; font-family:'Exo 2',sans-serif; }
+.rbtn:active{ transform:scale(.96); }
+.rbtn .rb-n{ display:block; font-family:'Orbitron',sans-serif; font-weight:900; font-size:1.7rem; }
+.rbtn .rb-l{ display:block; font-size:.86rem; font-weight:700; margin-top:4px; }
+.rbtn.all{ grid-column:1 / -1; background:linear-gradient(90deg,var(--flame-deep),var(--flame)); border-color:var(--flame-2); color:#03101f; }
+.rbtn.wrong .rb-n{ color:var(--fail); } .rbtn.blank .rb-n{ color:#ff9aa9; } .rbtn.flag .rb-n{ color:var(--warn); } .rbtn.right .rb-n{ color:var(--pass); }
+.rbtn.zero{ opacity:.4; pointer-events:none; }
+.opt .tagline{ display:block; font-size:.72rem; font-weight:700; margin-top:4px; letter-spacing:.5px; }
+.opt.correct .tagline{ color:var(--pass); } .opt.wrong .tagline{ color:var(--fail); }
+.opt.disabled{ opacity:1 !important; }
+.stab.dim{ opacity:.45; }
+.exp-box{ background:var(--bg-2); border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:6px; font-size:.86rem; line-height:1.6; color:#cfe0ff; }
+.exp-box .eb-h{ font-family:'Orbitron',sans-serif; font-size:.72rem; letter-spacing:1px; color:var(--flame-2); margin-bottom:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" class="back-link" id="backLink">← Back to F.A.S.P.A.S</a>
+
+  <div class="brand-row">
+    <div class="brand-mark">F</div>
+    <div>
+      <div class="brand-name">Full CBT Mode</div>
+      <div class="brand-sub">English + 3 electives · one 2-hour countdown · scored out of 400</div>
+    </div>
+  </div>
+
+  <!-- ===================== PICK SCREEN ===================== -->
+  <div id="screen-pick" class="card">
+    <div id="resumeBox" class="resume-box hidden">
+      <div class="rb-title" id="rbTitle">You have an unfinished exam</div>
+      <div class="rb-sub" id="rbSub"></div>
+      <div class="rb-btns">
+        <button class="start-btn" id="rbResume">Resume exam</button>
+        <button class="start-btn ghost" id="rbEnd">End &amp; score it</button>
+      </div>
+    </div>
+    <div id="lastBox" class="resume-box hidden">
+      <div class="rb-title">Last Full CBT result</div>
+      <div class="rb-sub" id="lastSub"></div>
+      <div class="rb-btns"><button class="start-btn ghost" id="lastOpen">Open result &amp; review</button></div>
+    </div>
+
+    <div id="pickBody">
+      <h2>Ready for a Full Mock Exam?</h2>
+      <p style="color:var(--muted); font-size:0.87rem; line-height:1.6; margin-bottom:16px;">
+        This simulates the real JAMB UTME: English is compulsory. Pick exactly
+        <b style="color:var(--flame-2);">3 electives</b> to match your course combination.
+        You get one single 2-hour countdown, can move freely between subjects and questions,
+        flag any question, and everything auto-submits when time runs out.
+        Explanations only show after you finish. Every attempt is saved to your History.
+        Each attempt gives you a fresh mix of questions.
+      </p>
+
+      <div class="elective-grid" id="electiveGrid">
+        <div class="mode-tile elective-tile" data-subject="physics"><div class="m-title">⚛️ Physics</div></div>
+        <div class="mode-tile elective-tile" data-subject="chemistry"><div class="m-title">🧪 Chemistry</div></div>
+        <div class="mode-tile elective-tile" data-subject="biology"><div class="m-title">🧬 Biology</div></div>
+        <div class="mode-tile elective-tile" data-subject="math"><div class="m-title">📐 Mathematics</div></div>
+      </div>
+      <p class="cd-note" id="electiveCount" style="margin-bottom:14px;">Choose 3 electives (0/3 selected)</p>
+      <button class="start-btn" id="startBtn" disabled>START FULL CBT — 2:00:00</button>
+      <div class="cd-note" id="pickMsg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- ===================== EXAM SCREEN ===================== -->
+  <div id="screen-exam" class="card hidden">
+    <div class="subj-tabs" id="subjTabs"></div>
+    <div class="exam-top">
+      <span id="qCounter">Q 1/60</span>
+      <span class="timer-badge" id="timerBadge">⏱ 2:00:00</span>
+      <button class="map-inline" id="mapBtn">MAP</button>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="q-tag" id="qTag"></div>
+    <div id="qPassage" class="q-passage hidden"></div>
+    <div class="q-text" id="qText"></div>
+    <div id="qImg" class="q-img hidden"></div>
+    <div id="optsWrap"></div>
+    <div class="nav-row">
+      <button class="start-btn ghost" id="prevBtn">← Previous</button>
+      <button class="start-btn ghost" id="flagBtn">🚩 Flag</button>
+      <button class="start-btn" id="nextBtn">Next →</button>
+    </div>
+    <button class="start-btn danger" style="margin-top:12px;" id="submitBtn">Submit Full CBT</button>
+  </div>
+
+  <!-- ===================== REVIEW VIEWER ===================== -->
+  <div id="screen-rview" class="card hidden">
+    <div class="subj-tabs" id="rvTabs"></div>
+    <div id="rvEmpty" class="empty-note hidden">No questions here for this subject.</div>
+    <div id="rvBody">
+    <div class="exam-top"><span id="rvCounter">Wrong · 1/10</span><span class="r-badge" id="rvBadge"></span></div>
+    <div class="progress-bar"><div class="progress-fill" id="rvFill"></div></div>
+    <div class="q-tag" id="rvTag"></div>
+    <div id="rvPassage" class="q-passage hidden"></div>
+    <div class="q-text" id="rvText"></div>
+    <div id="rvImg" class="q-img hidden"></div>
+    <div id="rvOpts"></div>
+    <div class="exp-box"><div class="eb-h">EXPLANATION &amp; HACK</div><div id="rvExp"></div></div>
+    <button class="save-btn" id="rvSave"></button>
+    <div class="nav-row">
+      <button class="start-btn ghost" id="rvPrev">← Previous</button>
+      <button class="start-btn" id="rvNext">Next →</button>
+    </div>
+    </div>
+    <button class="start-btn ghost" style="margin-top:12px;" id="rvBack">← Back to result</button>
+  </div>
+
+  <!-- ===================== RESULT SCREEN ===================== -->
+  <div id="screen-review" class="card hidden">
+    <h2>Full CBT Result</h2>
+    <div class="score-circle">
+      <div class="score-num" id="reviewScore">0/400</div>
+      <div class="score-label">TOTAL SCORE</div>
+    </div>
+    <div class="cd-note" id="reviewMeta" style="margin-bottom:10px;"></div>
+    <div class="subject-breakdown" id="subjectBreakdown"></div>
+    <h2 style="margin-top:20px;">Review your answers</h2>
+    <div class="cd-note" style="margin-bottom:4px;">Tap a button to go through those questions one by one.</div>
+    <div class="rgrid" id="revGrid"></div>
+    <a href="revise.html" class="start-btn" style="margin-top:16px; display:block; text-align:center; text-decoration:none;">Go to Revise (weak topics &amp; wrong answers)</a>
+    <button class="start-btn ghost" id="newExamBtn" style="margin-top:10px;">Start a new Full CBT</button>
+    <a href="history.html" class="start-btn ghost" style="margin-top:10px; display:block; text-align:center; text-decoration:none;">View History</a>
+    <a href="index.html" class="start-btn ghost" style="margin-top:10px; display:block; text-align:center; text-decoration:none;">Back to Home</a>
+  </div>
+
+</div>
+
+<div id="warnBanner" class="warn-banner hidden"></div>
+
+<!-- Question navigator -->
+
+<div id="qnavPanel" class="qnav-panel">
+  <h3>Question Map</h3>
+  <div class="qnav-legend">
+    <span><span class="dot" style="background:rgba(255,84,112,0.25); border:1px solid var(--fail);"></span>Unanswered</span>
+    <span><span class="dot" style="background:rgba(61,220,132,0.3); border:1px solid var(--pass);"></span>Answered</span>
+    <span><span class="dot" style="background:rgba(255,184,77,0.3); border:1px solid var(--warn);"></span>Flagged</span>
+    <span><span class="dot" style="background:rgba(47,143,255,0.5); border:1px solid #4aa3ff;"></span>Current</span>
+  </div>
+  <div id="qnavGrid"></div>
+  <button class="start-btn ghost" id="qnavClose">Close</button>
+</div>
+
+<!-- Confirm modal -->
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-text" id="modalText"></div>
+    <div class="rb-btns">
+      <button class="start-btn" id="modalYes">Yes</button>
+      <button class="start-btn ghost" id="modalNo">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="faspas-bank.js"></script>
+<script type="module">
+import { checkFullCbtAccess, renderLockScreen } from './faspas-lock.js';
+
+const $ = id => document.getElementById(id);
+const B = window.FaspasBank;
+const SESSION_KEY = 'faspas_cbt_session';
+const EXAM_SECONDS = 7200;
+const ORDER_ELECTIVES = ['physics','chemistry','biology','math'];
+
+let S = null;            // saved session
+let Q = {};              // key -> [question objects]
+let LD = {};             // key -> loaded bank info (passages, imgs)
+let cur = { k: 0, i: 0 };
+let tickId = null;
+let selected = [];
+
+/* ---------------- storage ---------------- */
+function save(){ try{ localStorage.setItem(SESSION_KEY, JSON.stringify(S)); }catch(e){ console.warn('save failed', e); } }
+function readSession(){
+  try{ const r = localStorage.getItem(SESSION_KEY); const s = r ? JSON.parse(r) : null; return (s && s.v===1) ? s : null; }
+  catch(e){ return null; }
+}
+function jget(k, d){ try{ const r = localStorage.getItem(k); return r ? JSON.parse(r) : d; }catch(e){ return d; } }
+function jset(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+
+/* ---------------- helpers ---------------- */
+function showScreen(name){
+  ['pick','exam','review','rview'].forEach(n => $('screen-'+n).classList.toggle('hidden', n!==name));
+  $('backLink').classList.toggle('hidden', name!=='pick');
+  const ib = $('installBar'); if(ib) ib.style.display = (name==='exam' || name==='rview') ? 'none' : '';
+}
+/* ---- back-button handling: every inner view is a history step, so the phone's
+   Back button goes to the previous view instead of leaving the page ---- */
+let pendingGoto = null;
+function pushView(v, extra){ try{ history.pushState(Object.assign({ v:v }, extra||{}), ''); }catch(e){} }
+function replaceView(v, extra){ try{ history.replaceState(Object.assign({ v:v }, extra||{}), ''); }catch(e){} }
+function leaveToPick(){
+  clearInterval(tickId);
+  closeMapUI();
+  showScreen('pick');
+  paintPick();
+  window.scrollTo(0,0);
+}
+function ready(){ return S && Q && S.keys && S.keys.every(k => Q[k]); }
+window.addEventListener('popstate', e => {
+  const st = e.state || { v:'pick' };
+  closeMapUI();
+  if(st.v === 'exam' && ready() && !S.done){
+    showScreen('exam');
+    if(pendingGoto){ cur = pendingGoto; pendingGoto = null; }
+    renderQ();
+    clearInterval(tickId); tick(); tickId = setInterval(tick, 1000);
+  } else if(st.v === 'map' && ready() && !S.done){
+    showScreen('exam'); openMapUI();
+  } else if(st.v === 'result' && S && S.done){
+    showResult(false);
+  } else if(st.v === 'rview' && ready() && S && S.done && st.f){
+    openRview(st.f, st.n || 0, false, st.s);
+  } else {
+    leaveToPick();
+  }
+});
+
+function fmt(sec){
+  sec = Math.max(0, sec);
+  const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+  return h + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+function subjLabel(k){ return B.SUBJECTS[k].label; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function ask(title, text, yes){
+  return new Promise(res=>{
+    $('modalTitle').textContent = title;
+    $('modalText').innerHTML = text;
+    $('modalYes').textContent = yes || 'Yes';
+    $('modal').classList.remove('hidden');
+    const done = v => { $('modal').classList.add('hidden'); $('modalYes').onclick = $('modalNo').onclick = null; res(v); };
+    $('modalYes').onclick = () => done(true);
+    $('modalNo').onclick = () => done(false);
+  });
+}
+function banner(msg){
+  const b = $('warnBanner'); b.textContent = msg; b.classList.remove('hidden');
+  setTimeout(()=>b.classList.add('hidden'), 5000);
+}
+
+/* ---------------- rendering a question (same rules as the subject pages) ---------------- */
+function fillContent(q, k, els){
+  const L = LD[k] || {};
+  const chem = (k === 'chemistry');
+  if(chem) els.text.innerHTML = B.rich(q.q, L.imgs); else els.text.textContent = q.q;
+  // passage (English)
+  if(els.passage){
+    if(q.p && L.passages && L.passages[q.p]){ els.passage.textContent = L.passages[q.p]; els.passage.classList.remove('hidden'); }
+    else { els.passage.textContent = ''; els.passage.classList.add('hidden'); }
+  }
+  // image
+  if(els.img){
+    els.img.innerHTML = '';
+    let shown = false;
+    if(q.img){
+      if(/^\s*</.test(q.img)) els.img.innerHTML = q.img;
+      else { const im = new Image(); im.src = q.img; im.alt = 'Question diagram'; im.draggable = false; els.img.appendChild(im); }
+      shown = true;
+    } else if(q.diagramSrc){
+      const im = new Image(); im.src = q.diagramSrc; im.alt = 'Diagram'; im.draggable = false; els.img.appendChild(im); shown = true;
+    }
+    els.img.classList.toggle('hidden', !shown);
+  }
+}
+function optHtml(q, k, i){
+  const L = LD[k] || {};
+  const letters = ['A','B','C','D'];
+  const body = (k === 'chemistry') ? B.rich(q.options[i], L.imgs, true) : q.options[i];
+  return '<span class="opt-letter">' + letters[i] + '.</span>' + body;
+}
+function expHtml(q, k){
+  const L = LD[k] || {};
+  const t = q.explanation || 'No explanation provided yet for this question.';
+  return (k === 'chemistry') ? B.rich(t, L.imgs) : t;
+}
+
+/* ---------------- start / resume ---------------- */
+async function loadBanks(keys){
+  await Promise.all(keys.map(async k => { LD[k] = await B.load(k); }));
+}
+function buildQuestions(){
+  Q = {};
+  S.keys.forEach(k => { Q[k] = B.rebuild(LD[k], S.papers[k]); });
+}
+
+async function startNew(){
+  $('startBtn').disabled = true;
+  $('pickMsg').textContent = 'Preparing your questions…';
+  const keys = ['english'].concat(ORDER_ELECTIVES.filter(k => selected.includes(k)));
+  try{
+    await loadBanks(keys);
+    const papers = {};
+    keys.forEach(k => { papers[k] = B.buildPaper(LD[k]).map(q => ({ id:q.id, ord:q.ord, c:q.correct, t:q.topic || 'General' })); });
+    const now = Date.now();
+    S = { v:1, started:now, endAt: now + EXAM_SECONDS*1000, keys, papers, ans:{}, flags:{}, pos:{k:0,i:0}, warned:{}, done:false };
+    save();
+    buildQuestions();
+    cur = { k:0, i:0 };
+    $('pickMsg').textContent = '';
+    enterExam();
+  }catch(e){
+    console.error(e);
+    $('pickMsg').textContent = 'Could not load the questions. Check your connection and try again.';
+    $('startBtn').disabled = false;
+  }
+}
+
+async function resumeExam(){
+  try{
+    await loadBanks(S.keys);
+    buildQuestions();
+    cur = { k: S.pos.k || 0, i: S.pos.i || 0 };
+    if(!Q[S.keys[cur.k]] || cur.i >= Q[S.keys[cur.k]].length) cur = { k:0, i:0 };
+    enterExam();
+  }catch(e){
+    console.error(e);
+    $('rbSub').textContent = 'Could not load the questions. Check your connection and try again.';
+  }
+}
+
+function enterExam(){
+  pushView('exam');
+  showScreen('exam');
+  window.scrollTo(0,0);
+  buildTabs();
+  renderQ();
+  clearInterval(tickId);
+  tick();
+  tickId = setInterval(tick, 1000);
+}
+
+/* ---------------- timer ---------------- */
+function tick(){
+  if(!S || S.done) return;
+  const left = Math.ceil((S.endAt - Date.now())/1000);
+  const badge = $('timerBadge');
+  badge.textContent = '⏱ ' + fmt(left);
+  badge.classList.toggle('low', left <= 1800 && left > 600);
+  badge.classList.toggle('critical', left <= 600);
+  if(left <= 1800 && left > 600 && !S.warned.w30){ S.warned.w30 = 1; save(); banner('⚠️ 30 minutes remaining'); }
+  if(left <= 600 && left > 0 && !S.warned.w10){ S.warned.w10 = 1; save(); banner('⚠️ 10 minutes remaining — wrap up!'); }
+  if(left <= 0){ finish(true); }
+}
+document.addEventListener('visibilitychange', () => { if(!document.hidden) tick(); });
+
+/* ---------------- exam UI ---------------- */
+function curQ(){ return Q[S.keys[cur.k]][cur.i]; }
+function buildTabs(){
+  $('subjTabs').innerHTML = S.keys.map((k,idx)=>'<button class="stab" data-k="'+idx+'">'+esc(subjLabel(k).replace('Use of ','').replace('Mathematics','Maths'))+'</button>').join('');
+  $('subjTabs').querySelectorAll('.stab').forEach(b => b.onclick = () => goto(+b.dataset.k, 0));
+}
+function renderQ(){
+  const k = S.keys[cur.k], list = Q[k], q = list[cur.i];
+  S.pos = { k:cur.k, i:cur.i }; save();
+  $('subjTabs').querySelectorAll('.stab').forEach((b,idx)=>b.classList.toggle('active', idx===cur.k));
+  $('qCounter').textContent = subjLabel(k) + ' · Q ' + (cur.i+1) + '/' + list.length;
+  let done = 0, total = 0;
+  S.keys.forEach(kk => Q[kk].forEach(x => { total++; if(S.ans[x.id] !== undefined) done++; }));
+  $('progressFill').style.width = (done/total*100) + '%';
+  $('qTag').textContent = 'Answered ' + done + ' of ' + total;
+  fillContent(q, k, { text:$('qText'), passage:$('qPassage'), img:$('qImg') });
+  const wrap = $('optsWrap'); wrap.innerHTML = '';
+  q.options.forEach((o,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt' + (S.ans[q.id] === i ? ' sel' : '');
+    b.innerHTML = optHtml(q, k, i);
+    b.onclick = () => choose(i);
+    wrap.appendChild(b);
+  });
+  $('flagBtn').textContent = S.flags[q.id] ? '🚩 Unflag' : '🚩 Flag';
+  $('flagBtn').classList.toggle('flag-on', !!S.flags[q.id]);
+  $('prevBtn').disabled = (cur.k===0 && cur.i===0);
+  const last = (cur.k===S.keys.length-1 && cur.i===list.length-1);
+  $('nextBtn').disabled = last;
+  window.scrollTo({ top:0 });
+}
+function choose(i){
+  const q = curQ();
+  if(S.ans[q.id] === i) delete S.ans[q.id]; else S.ans[q.id] = i;
+  save();
+  const btns = $('optsWrap').children;
+  for(let x=0;x<btns.length;x++) btns[x].classList.toggle('sel', S.ans[q.id] === x);
+  let done = 0, total = 0;
+  S.keys.forEach(kk => Q[kk].forEach(y => { total++; if(S.ans[y.id] !== undefined) done++; }));
+  $('progressFill').style.width = (done/total*100) + '%';
+  $('qTag').textContent = 'Answered ' + done + ' of ' + total;
+}
+function goto(k,i){ cur = { k, i }; renderQ(); }
+function next(){
+  const list = Q[S.keys[cur.k]];
+  if(cur.i < list.length-1) goto(cur.k, cur.i+1);
+  else if(cur.k < S.keys.length-1) goto(cur.k+1, 0);
+}
+function prev(){
+  if(cur.i > 0) goto(cur.k, cur.i-1);
+  else if(cur.k > 0) goto(cur.k-1, Q[S.keys[cur.k-1]].length-1);
+}
+function toggleFlag(){
+  const q = curQ();
+  if(S.flags[q.id]) delete S.flags[q.id]; else S.flags[q.id] = 1;
+  save(); renderQ();
+}
+
+/* ---------------- question map ---------------- */
+function openMapUI(){
+  let html = '';
+  S.keys.forEach((k,ki)=>{
+    html += '<div class="subject-block-label">' + esc(subjLabel(k)) + '</div><div class="qnav-grid">';
+    Q[k].forEach((q,i)=>{
+      let c = 'qnav-cell';
+      if(S.flags[q.id]) c += ' flagged';
+      else if(S.ans[q.id] !== undefined) c += ' answered';
+      else c += ' unanswered';
+      if(ki===cur.k && i===cur.i) c += ' current';
+      html += '<button class="'+c+'" data-k="'+ki+'" data-i="'+i+'">'+(i+1)+'</button>';
+    });
+    html += '</div>';
+  });
+  $('qnavGrid').innerHTML = html;
+  $('qnavGrid').querySelectorAll('.qnav-cell').forEach(b => b.onclick = () => { pendingGoto = { k:+b.dataset.k, i:+b.dataset.i }; history.back(); });
+  $('qnavPanel').classList.add('show');
+}
+function openMap(){ pushView('map'); openMapUI(); }
+function closeMapUI(){ $('qnavPanel').classList.remove('show'); }
+
+/* ---------------- submit & result ---------------- */
+async function confirmSubmit(){
+  let un = 0, fl = 0;
+  S.keys.forEach(k => Q[k].forEach(q => { if(S.ans[q.id] === undefined) un++; if(S.flags[q.id]) fl++; }));
+  const ok = await ask('Submit Full CBT?',
+    (un ? '<b style="color:var(--fail)">' + un + ' unanswered</b>' : 'All questions answered') +
+    (fl ? ' · <b style="color:var(--warn)">' + fl + ' flagged</b>' : '') +
+    '<br>You cannot change anything after submitting.', 'Submit now');
+  if(ok) finish(false);
+}
+
+/* Scoring works from the data saved with the session, so it never needs the network. */
+function hasMeta(sess){
+  return sess.keys.every(k => (sess.papers[k] || []).every(it => typeof it.c === 'number'));
+}
+function itemsOf(k){
+  if(Q[k]) return Q[k].map(q => ({ id:q.id, c:q.correct, t:q.topic || 'General' }));
+  return (S.papers[k] || []).map(it => ({ id:it.id, c:it.c, t:it.t || 'General' }));
+}
+
+function computeResult(){
+  const subs = [], topics = {}, bySubject = {};
+  let total400 = 0;
+  S.keys.forEach(k=>{
+    let correct = 0, wrong = 0, blank = 0;
+    bySubject[k] = {};
+    const list = itemsOf(k);
+    list.forEach(q=>{
+      const a = S.ans[q.id];
+      const t = q.t;
+      if(!topics[t]) topics[t] = { correct:0, total:0 };
+      if(!bySubject[k][t]) bySubject[k][t] = { correct:0, total:0 };
+      topics[t].total++; bySubject[k][t].total++;
+      if(a === undefined) blank++;
+      else if(a === q.c){ correct++; topics[t].correct++; bySubject[k][t].correct++; }
+      else wrong++;
+    });
+    const n = list.length;
+    const s100 = n ? Math.round(correct / n * 100) : 0;
+    total400 += s100;
+    subs.push({ key:k, name:subjLabel(k), correct, wrong, blank, total:n, score100:s100 });
+  });
+  return { subs, topics, bySubject, total400 };
+}
+
+function updateBanks(){
+  const wrong = jget('faspas_wrong', {});
+  const now = Date.now();
+  S.keys.forEach(k => itemsOf(k).forEach(q=>{
+    const a = S.ans[q.id];
+    if(a === undefined) return;
+    if(a === q.c){ delete wrong[q.id]; }
+    else {
+      const w = wrong[q.id] || { subject:k, n:0 };
+      w.n++; w.last = now; w.subject = k; w.topic = q.t;
+      wrong[q.id] = w;
+    }
+  }));
+  jset('faspas_wrong', wrong);
+}
+
+function record(res){
+  const names = S.keys.map(k => subjLabel(k).replace('Use of English','English'));
+  const entry = {
+    kind:'fullcbt',
+    modeLabel:'Full CBT · ' + names.join(', '),
+    score: res.total400, total: 400,
+    breakdown: res.topics,
+    bySubject: res.bySubject,
+    subjectBreakdown: Object.fromEntries(res.subs.map(s => [s.name, { correct:s.correct, total:s.total, score100:s.score100 }])),
+    timeUsed: Math.min(EXAM_SECONDS, Math.round((Math.min(Date.now(), S.endAt) - S.started)/1000)),
+    date: new Date().toISOString()
+  };
+  const h = jget('faspas_history', []);
+  h.unshift(entry);
+  jset('faspas_history', h.slice(0,200));
+}
+
+function finish(auto, silent){
+  if(!S || S.done) return;
+  clearInterval(tickId);
+  S.done = true;
+  S.finishedAt = Math.min(Date.now(), S.endAt);
+  closeMapUI();
+  const res = computeResult();
+  if(!S.recorded){ S.recorded = true; record(res); updateBanks(); }
+  S.final = { total400: res.total400, subs: res.subs.map(s => ({ name:s.name, score100:s.score100, correct:s.correct, total:s.total })) };
+  save();
+  if(silent) return res;
+  if(auto) banner('⏰ Time is up — your exam was submitted automatically');
+  if(history.state && history.state.v === 'pick') pushView('result'); else replaceView('result');
+  showResult(false);
+  return res;
+}
+
+const FILTERS = [['all','All','all'],['wrong','Wrong','wrong'],['blank','Unanswered','blank'],['flag','Flagged','flag'],['right','Correct','right']];
+function allRows(){
+  const rows = [];
+  S.keys.forEach(k => itemsOf(k).forEach((it,i) => {
+    const a = S.ans[it.id];
+    rows.push({ k, i, q: Q[k] ? Q[k][i] : null, a, st: a === undefined ? 'blank' : (a === it.c ? 'right' : 'wrong'), flag: !!S.flags[it.id] });
+  }));
+  return rows;
+}
+function rowsFor(f){
+  const rows = allRows();
+  return f==='all' ? rows : f==='flag' ? rows.filter(r=>r.flag) : rows.filter(r=>r.st===f);
+}
+
+function showResult(pushIt){
+  if(pushIt) pushView('result');
+  showScreen('review');
+  window.scrollTo(0,0);
+  const res = computeResult();
+  $('reviewScore').textContent = res.total400 + '/400';
+  const used = Math.min(EXAM_SECONDS, Math.round(((S.finishedAt||Date.now()) - S.started)/1000));
+  $('reviewMeta').textContent = 'Time used: ' + fmt(used) + ' · each subject is scored out of 100';
+  $('subjectBreakdown').innerHTML = res.subs.map(s =>
+    '<div class="sb-row"><span>' + esc(s.name) + '</span><span><b>' + s.score100 + '/100</b> <span style="color:var(--muted)">(' + s.correct + '/' + s.total + ' correct' + (s.blank ? ', ' + s.blank + ' blank' : '') + ')</span></span></div>').join('');
+  $('revGrid').innerHTML = FILTERS.map(f => {
+    const n = rowsFor(f[0]).length;
+    const label = f[0]==='all' ? 'All ' + n + ' questions' : f[1];
+    return '<button class="rbtn ' + f[2] + (n ? '' : ' zero') + '" data-f="' + f[0] + '"><span class="rb-n">' + (f[0]==='all' ? '' : n) + '</span><span class="rb-l">' + label + '</span></button>';
+  }).join('');
+  $('revGrid').querySelectorAll('.rbtn').forEach(b => b.onclick = () => openRview(b.dataset.f, 0, true));
+}
+
+let RV = { f:'all', s:null, rows:[], n:0 };
+async function openRview(f, n, pushIt, subj){
+  if(!ready()){
+    try{ await loadBanks(S.keys); buildQuestions(); }
+    catch(e){ banner('Connect to the internet once to open the review'); return; }
+  }
+  const all = rowsFor(f);
+  if(!all.length){ showResult(false); return; }
+  // default subject: the first one that has questions in this list
+  let sk = subj && S.keys.includes(subj) ? subj : null;
+  if(!sk){ sk = S.keys.find(k => all.some(r => r.k === k)) || S.keys[0]; }
+  setRview(f, sk, n);
+  if(pushIt) pushView('rview', { f, n:RV.n, s:sk });
+  showScreen('rview');
+  renderRview();
+}
+function setRview(f, sk, n){
+  const rows = rowsFor(f).filter(r => r.k === sk);
+  RV = { f, s:sk, rows, n: rows.length ? Math.min(Math.max(0, n), rows.length-1) : 0 };
+}
+function renderTabs(){
+  const all = rowsFor(RV.f);
+  $('rvTabs').innerHTML = S.keys.map(k => {
+    const c = all.filter(r => r.k === k).length;
+    return '<button class="stab' + (k===RV.s ? ' active' : '') + (c ? '' : ' dim') + '" data-k="' + k + '">' +
+      esc(subjLabel(k).replace('Use of ','').replace('Mathematics','Maths')) + ' (' + c + ')</button>';
+  }).join('');
+  $('rvTabs').querySelectorAll('.stab').forEach(b => b.onclick = () => { setRview(RV.f, b.dataset.k, 0); renderRview(); });
+}
+function renderRview(){
+  renderTabs();
+  if(!RV.rows.length){
+    $('rvBody').classList.add('hidden'); $('rvEmpty').classList.remove('hidden');
+    replaceView('rview', { f:RV.f, n:0, s:RV.s });
+    return;
+  }
+  $('rvBody').classList.remove('hidden'); $('rvEmpty').classList.add('hidden');
+  const r = RV.rows[RV.n], q = r.q, k = r.k, L = LD[k] || {};
+  const fl = FILTERS.find(x => x[0]===RV.f);
+  $('rvCounter').textContent = fl[1] + ' · ' + (RV.n+1) + '/' + RV.rows.length;
+  const bd = $('rvBadge');
+  bd.className = 'r-badge ' + r.st;
+  bd.textContent = (r.st==='right' ? 'Correct' : r.st==='wrong' ? 'Wrong' : 'Unanswered') + (r.flag ? ' 🚩' : '');
+  $('rvFill').style.width = ((RV.n+1)/RV.rows.length*100) + '%';
+  $('rvTag').textContent = subjLabel(k) + ' · Q' + (r.i+1) + (q.year ? ' · JAMB ' + q.year : '');
+  fillContent(q, k, { text:$('rvText'), passage:$('rvPassage'), img:$('rvImg') });
+  const wrap = $('rvOpts'); wrap.innerHTML = '';
+  q.options.forEach((o,i) => {
+    const b = document.createElement('div');
+    let cls = 'opt disabled', tag = '';
+    if(i === q.correct){ cls += ' correct'; tag = (r.a === i) ? '✓ YOUR ANSWER · CORRECT' : '✓ CORRECT ANSWER'; }
+    else if(i === r.a){ cls += ' wrong'; tag = '✗ YOUR ANSWER'; }
+    b.className = cls;
+    b.innerHTML = optHtml(q, k, i) + (tag ? '<span class="tagline">' + tag + '</span>' : '');
+    wrap.appendChild(b);
+  });
+  $('rvExp').innerHTML = expHtml(q, k);
+  const saved = jget('faspas_saved', {});
+  $('rvSave').textContent = saved[q.id] ? '★ Saved' : '☆ Save question';
+  $('rvSave').classList.toggle('on', !!saved[q.id]);
+  $('rvPrev').disabled = RV.n === 0;
+  $('rvNext').disabled = RV.n === RV.rows.length-1;
+  replaceView('rview', { f:RV.f, n:RV.n, s:RV.s });
+  window.scrollTo(0,0);
+}
+
+/* ---------------- pick screen ---------------- */
+function paintPick(){
+  const sess = readSession();
+  $('resumeBox').classList.add('hidden');
+  $('lastBox').classList.add('hidden');
+  $('pickBody').classList.remove('hidden');
+  if(sess && !sess.done){
+    S = sess;
+    const left = Math.max(0, Math.ceil((S.endAt - Date.now())/1000));
+    const answered = Object.keys(S.ans).length;
+    $('rbSub').textContent = answered + ' answered · ' + (left > 0 ? fmt(left) + ' left on the clock' : 'time already ran out — tap End & score it');
+    $('resumeBox').classList.remove('hidden');
+    $('pickBody').classList.add('hidden');
+    $('rbResume').style.display = left > 0 ? '' : 'none';
+  } else if(sess && sess.done && sess.final){
+    S = sess;
+    $('lastSub').textContent = sess.final.total400 + '/400 · ' + new Date(sess.finishedAt).toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
+    $('lastBox').classList.remove('hidden');
+  }
+}
+
+async function scoreNow(auto){
+  const sess = readSession();
+  if(!sess || sess.done) return false;
+  S = sess;
+  try{
+    if(!hasMeta(S)){ await loadBanks(S.keys); buildQuestions(); }
+    S.endAt = Math.min(S.endAt, Date.now());
+    finish(auto, true);
+    paintPick();
+    banner((auto ? '⏰ Time was up — exam scored: ' : 'Exam scored: ') + S.final.total400 + '/400. See it in History.');
+    return true;
+  }catch(e){
+    localStorage.removeItem(SESSION_KEY); S = null;
+    paintPick();
+    banner('That old exam could not be scored, so it was cleared. You can start a fresh one.');
+    return false;
+  }
+}
+
+async function init(){
+  replaceView('pick');
+  const access = await checkFullCbtAccess();
+  if(access.blocked){
+    $('screen-pick').innerHTML = '';
+    renderLockScreen($('screen-pick'), access.reason);
+    return;
+  }
+  { const t = readSession(); if(t && !t.done && t.endAt <= Date.now()) await scoreNow(true); }
+  paintPick();
+
+  document.querySelectorAll('.elective-tile').forEach(tile=>{
+    tile.addEventListener('click', ()=>{
+      const subj = tile.dataset.subject;
+      if(tile.classList.contains('selected')){ tile.classList.remove('selected'); selected = selected.filter(s=>s!==subj); }
+      else { if(selected.length>=3) return; tile.classList.add('selected'); selected.push(subj); }
+      $('electiveCount').textContent = 'Choose 3 electives (' + selected.length + '/3 selected)';
+      $('startBtn').disabled = selected.length !== 3;
+      document.querySelectorAll('.elective-tile').forEach(t => t.classList.toggle('locked', selected.length>=3 && !t.classList.contains('selected')));
+    });
+  });
+  $('startBtn').onclick = () => { if(selected.length===3) startNew(); };
+  $('rbResume').onclick = resumeExam;
+  $('rbEnd').onclick = async () => {
+    const ok = await ask('End this exam?', 'It will be scored with the answers you have now and saved to your History.', 'End & score it');
+    if(!ok) return;
+    await scoreNow(false);
+  };
+  $('lastOpen').onclick = async () => {
+    try{ await loadBanks(S.keys); buildQuestions(); showResult(true); }
+    catch(e){ $('lastSub').textContent = 'Could not load the questions. Check your connection and try again.'; }
+  };
+  $('newExamBtn').onclick = () => history.back();
+  $('prevBtn').onclick = prev;
+  $('nextBtn').onclick = next;
+  $('flagBtn').onclick = toggleFlag;
+  $('submitBtn').onclick = confirmSubmit;
+  $('mapBtn').onclick = openMap;
+  $('qnavClose').onclick = () => history.back();
+  $('rvPrev').onclick = () => { if(RV.n>0){ RV.n--; renderRview(); } };
+  $('rvNext').onclick = () => { if(RV.n<RV.rows.length-1){ RV.n++; renderRview(); } };
+  $('rvBack').onclick = () => history.back();
+  $('rvSave').onclick = () => {
+    const q = RV.rows[RV.n].q, k = RV.rows[RV.n].k, sv = jget('faspas_saved', {});
+    if(sv[q.id]) delete sv[q.id]; else sv[q.id] = { subject:k, topic:q.topic || 'General', t:Date.now() };
+    jset('faspas_saved', sv);
+    $('rvSave').textContent = sv[q.id] ? '★ Saved' : '☆ Save question'; $('rvSave').classList.toggle('on', !!sv[q.id]);
+  };
+}
+init();
+</script>
+
+<!-- PWA install bar: our own trigger, not Chrome's native mini-infobar -->
+<div class="install-bar" id="installBar">
+  <div class="ib-icon">F</div>
+  <div class="ib-text">
+    <div class="ib-title" id="installTitle">Install the F.A.S.P.A.S app</div>
+    <div class="ib-sub" id="installSub">Works offline, opens like a real app</div>
+  </div>
+  <button class="ib-btn" id="installBtn">Install</button>
+</div>
+
+
+<script>
+(function(){
+  let deferredPrompt = null;
+  let autoPromptOnceReady = false;
+  const bar = document.getElementById('installBar');
+  const btn = document.getElementById('installBtn');
+  const subEl = document.getElementById('installSub');
+  const titleEl = document.getElementById('installTitle');
+
+  function isStandalone(){
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+  function isIOS(){
+    return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+  }
+
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW registration failed:', e));
+  }
+
+  if(!isStandalone()){
+    // Show our own button immediately — don't wait around for Chrome's own timing/heuristics.
+    bar.classList.add('show');
+    if(isIOS()){
+      titleEl.textContent = 'Add F.A.S.P.A.S to Home Screen';
+      subEl.textContent = 'Tap Share, then "Add to Home Screen"';
+      btn.textContent = 'How?';
+    }
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if(!isStandalone()) bar.classList.add('show');
+    if(autoPromptOnceReady){
+      autoPromptOnceReady = false;
+      triggerInstall();
+    }
+  });
+
+  async function triggerInstall(){
+    if(isIOS()){
+      alert('On iPhone/iPad:\n1. Tap the Share icon in Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add"');
+      return;
+    }
+    if(!deferredPrompt){
+      // Chrome hasn't fired the event yet — queue the intent and let the user know.
+      btn.textContent = 'Preparing…';
+      autoPromptOnceReady = true;
+      setTimeout(()=>{ if(btn.textContent==='Preparing…') btn.textContent = 'Install'; }, 6000);
+      return;
+    }
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    if(choice && choice.outcome === 'accepted'){
+      bar.classList.remove('show');
+    }
+  }
+
+  btn.addEventListener('click', triggerInstall);
+
+  window.addEventListener('appinstalled', () => {
+    bar.classList.remove('show');
+    deferredPrompt = null;
+  });
+})();
+</script>
+
+</body>
+</html>
