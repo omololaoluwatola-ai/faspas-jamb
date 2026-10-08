@@ -16,7 +16,7 @@
 // TESTING SWITCH:
 //   Set LOCK_ENFORCEMENT_ENABLED to false to give every signed-in student full access
 //   (useful for testing). It is ON for launch.
-const LOCK_ENFORCEMENT_ENABLED = true;
+const LOCK_ENFORCEMENT_ENABLED = false;
 
 import { auth } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
